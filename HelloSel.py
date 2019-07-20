@@ -17,7 +17,7 @@ connection = pymysql.connect(host='work.ciu1thdpia44.us-east-2.rds.amazonaws.com
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-specificKeywordList = ["regular expressions","regex","regular expressions concepts","regular expressions exercises"]
+specificKeywordList = ["regular expressions", "regex", "regular expressions concepts", "regular expressions exercises"]
 authorName = "Sujith George"
 
 while True:
@@ -26,7 +26,7 @@ while True:
 
     sql = "SELECT `configvalue` FROM `configs` where `configname`='TASKSPLIT'"
 
-    allTasks = ["ENROLMENT","BROWSE","WATCHVIDEO","SPECIFIC"]
+    allTasks = ["ENROLMENT", "BROWSE", "WATCHVIDEO", "SPECIFIC"]
 
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -36,14 +36,14 @@ while True:
 
     runMode = random.choices(allTasks, taskSplitList, k=1)[0]
 
-    #runMode = 'WATCHVIDEO'
+    # runMode = 'WATCHVIDEO'
 
     print("runMode is:" + runMode)
 
     (loginusername, loginpassword) = CommonCalls.getCredsForCurrentStage(runMode)
 
-    #loginusername = 'a.modesto@aol.com'
-    #loginpassword = 'm.mm00axxx'
+    # loginusername = 'a.modesto@aol.com'
+    # loginpassword = 'm.mm00axxx'
 
     driver = TorBrowserDriver("/home/ubuntu/Downloads/tor-browser-linux64-8.5.4_en-US/tor-browser_en-US")
 
@@ -51,6 +51,7 @@ while True:
 
     if (runMode == 'ENROLMENT'):
         CommonCalls.freshSignUp(driver)
+        driver.delete_all_cookies()
         driver.quit()
         sleep(30)
         continue
@@ -61,7 +62,7 @@ while True:
 
     try:
         if (runMode == 'BROWSE'):
-            CommonCalls.login(driver,loginusername,loginpassword)
+            CommonCalls.login(driver, loginusername, loginpassword)
             # TODO increase
             for i in range(random.randint(1, 2)):
                 CommonCalls.memberBrowseAndEnroll(driver)
@@ -69,13 +70,13 @@ while True:
                     CommonCalls.watchVideo(driver)
 
         if (runMode == 'WATCHVIDEO'):
-            CommonCalls.login(driver,loginusername,loginpassword)
+            CommonCalls.login(driver, loginusername, loginpassword)
             CommonCalls.watchVideo(driver)
 
         if (runMode == 'SPECIFIC'):
-            CommonCalls.login(driver,loginusername,loginpassword)
-            CommonCalls.specificEnroll(driver,specificKeywordList,authorName)
-            CommonCalls.watchSpecificVideo(driver,authorName)
+            CommonCalls.login(driver, loginusername, loginpassword)
+            CommonCalls.specificEnroll(driver, specificKeywordList, authorName)
+            CommonCalls.watchSpecificVideo(driver, authorName)
 
         sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now())"
         print("generic success sql:" + sql)
@@ -83,12 +84,12 @@ while True:
         connection.commit()
 
     except Exception as excp:
-        sql = "INSERT into `tasks` values('" + loginusername + "','ERROR-"+runMode+"','" + "failed:" + traceback.format_exc().replace(
+        sql = "INSERT into `tasks` values('" + loginusername + "','ERROR-" + runMode + "','" + "failed:" + traceback.format_exc().replace(
             "'", '"') + "',now())"
-        print("generic exception catch sql:"+sql)
+        print("generic exception catch sql:" + sql)
         cursor.execute(sql)
         connection.commit()
     finally:
+        driver.delete_all_cookies()
         driver.quit()
         sleep(30)
-
