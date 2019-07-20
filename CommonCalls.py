@@ -49,27 +49,30 @@ cursor = connection.cursor()
 #
 #
 def getCredsForCurrentStage(runMode):
-    sql = ""
+    try:
+        sql = ""
 
-    if (runMode == 'ENROLMENT'):
+        if (runMode == 'ENROLMENT'):
+            return ("","")
+
+        if (runMode == 'BROWSE'):
+            sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='ENROLMENT' order by RAND() limit 1"
+
+        if (runMode == 'WATCHVIDEO'):
+            sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='BROWSE' order by RAND() limit 1"
+
+        if (runMode == 'SPECIFIC'):
+            sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO' order by RAND() limit 1"
+
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        email = result[0]['email']
+        sql = "SELECT `passwd` FROM `creds` where `email`='" + email + "' order by RAND() limit 1"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        passwd = result[0]['passwd']
+    except Exception:
         return ("","")
-
-    if (runMode == 'BROWSE'):
-        sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='ENROLMENT' order by RAND() limit 1"
-
-    if (runMode == 'WATCHVIDEO'):
-        sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='BROWSE' order by RAND() limit 1"
-
-    if (runMode == 'SPECIFIC'):
-        sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO' order by RAND() limit 1"
-
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    email = result[0]['email']
-    sql = "SELECT `passwd` FROM `creds` where `email`='" + email + "' order by RAND() limit 1"
-    cursor.execute(sql)
-    result = cursor.fetchall()
-    passwd = result[0]['passwd']
     return (email, passwd)
 
 
@@ -284,7 +287,7 @@ def memberBrowseAndEnroll(driver):
     topSearchFieldEl.send_keys(random.choice(searchKeywords))
     topSearchFieldEl.send_keys(Keys.RETURN)
     sleep(random.randint(10, 15))
-    if random.choices([True, False],[75,25],k=1)[0]:
+    if random.choices([True, False],[85,15],k=1)[0]:
         filterButtonEl = driver.find_element_by_xpath('//button[contains(@class,"filter")]/span[text()="All Filters"]')
         filterButtonEl.click()
         sleep(random.randint(2, 4))
