@@ -274,6 +274,8 @@ def freshSignUp(driver):
 #
 #
 def memberBrowseAndEnroll(driver):
+    driver.get("http://www.udemy.com")
+    sleep(random.randint(10, 15))
     # After signinup up, search using top search field, select one results, look at one course landing page, come back
     topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
     action = ActionChains(driver)
@@ -331,6 +333,8 @@ def memberBrowseAndEnroll(driver):
 #
 #
 def watchVideo(driver):
+    driver.get("http://www.udemy.com")
+    sleep(random.randint(10, 15))
     myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
     myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
@@ -423,6 +427,8 @@ def login(driver,loginusername,loginpassword):
 
 
 def specificEnroll(driver,specificKeywordList,authorName):
+    driver.get("http://www.udemy.com")
+    sleep(random.randint(10, 15))
     topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
     action = ActionChains(driver)
     action.move_to_element(topSearchFieldEl).click().perform()
@@ -475,6 +481,8 @@ def specificEnroll(driver,specificKeywordList,authorName):
 #
 #
 def watchSpecificVideo(driver,authorName):
+    driver.get("http://www.udemy.com")
+    sleep(random.randint(10, 15))
     myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
     myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
