@@ -50,6 +50,7 @@ cursor = connection.cursor()
 #
 #
 def getCredsForCurrentStage(runMode):
+    print("Inside getCredsForCurrentStage")
     try:
         sql = ""
 
