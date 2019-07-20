@@ -66,7 +66,7 @@ while True:
             # TODO increase
             for i in range(random.randint(1, 2)):
                 CommonCalls.memberBrowseAndEnroll(driver)
-                if random.choice([True, False]):
+                if random.choices([True, False], [30, 70], k=1)[0]:
                     CommonCalls.watchVideo(driver)
 
         if (runMode == 'WATCHVIDEO'):
