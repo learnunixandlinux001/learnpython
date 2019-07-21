@@ -58,13 +58,13 @@ def getCredsForCurrentStage(runMode):
             return ("", "")
 
         if (runMode == 'BROWSE'):
-            sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='ENROLMENT' order by RAND() limit 1"
+            sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='ENROLMENT' order by RAND() limit 1"
 
         if (runMode == 'WATCHVIDEO'):
-            sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='BROWSE' order by RAND() limit 1"
+            sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE' order by RAND() limit 1"
 
         if (runMode == 'SPECIFIC'):
-            sql = "SELECT `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO' order by RAND() limit 1"
+            sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO' order by RAND() limit 1"
 
         cursor.execute(sql)
         result = cursor.fetchall()
