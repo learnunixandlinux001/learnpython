@@ -50,7 +50,7 @@ cursor = connection.cursor()
 #
 #
 def getCredsForCurrentStage(runMode):
-    print("Inside getCredsForCurrentStage")
+    print("Entering getCredsForCurrentStage")
     try:
         sql = ""
 
@@ -73,7 +73,9 @@ def getCredsForCurrentStage(runMode):
         cursor.execute(sql)
         result = cursor.fetchall()
         passwd = result[0]['passwd']
-    except Exception:
+        print("Exited getCredsForCurrentStage")
+    except Exception as e:
+        print("Exception in getCredsForCurrentStage. Returning blank creds")
         return ("", "")
     return (email, passwd)
 
