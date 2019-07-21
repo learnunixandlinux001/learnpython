@@ -421,8 +421,6 @@ def login(driver, loginusername, loginpassword):
     # Click Login button
     loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
     driver.execute_script("arguments[0].scrollIntoView();", loginButtonEl)
-    action = ActionChains(driver)
-    action.move_to_element(loginButtonEl).click().perform()
     sleep(random.randint(10, 15))
     # Fill up username and password and submit
     emailTextBoxEl = driver.find_element_by_xpath("//input[@name='email']")
