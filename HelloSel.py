@@ -58,7 +58,7 @@ while True:
         CommonCalls.freshSignUp(driver)
         driver.delete_all_cookies()
         driver.quit()
-        sleep(30)
+        sleep(61)
         continue
 
     if ((len(loginusername) == 0) or (len(loginpassword) == 0)):
@@ -97,4 +97,4 @@ while True:
     finally:
         driver.delete_all_cookies()
         driver.quit()
-        sleep(30)
+        sleep(61)
