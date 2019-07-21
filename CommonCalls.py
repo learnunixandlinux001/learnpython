@@ -213,16 +213,12 @@ def freshSignUp(driver):
 
         # Click Sign up button
         signUpButtonEl = driver.find_element_by_xpath("//button[@data-purpose='header-signup']")
-        driver.execute_script("arguments[0].scrollIntoView();", signUpButtonEl)
-        action = ActionChains(driver)
-        action.move_to_element(signUpButtonEl).click().perform()
+        driver.execute_script("arguments[0].click();", signUpButtonEl)
         sleep(random.randint(6, 8))
         # Click email signup button - won't be there sometimes
         try:
             emailSignUpButtonEl = driver.find_element_by_xpath("//a[@data-purpose='email-signup-link']")
-            driver.execute_script("arguments[0].scrollIntoView();", emailSignUpButtonEl)
-            action = ActionChains(driver)
-            action.move_to_element(emailSignUpButtonEl).click().perform()
+            driver.execute_script("arguments[0].click();", emailSignUpButtonEl)
             sleep(random.randint(3, 5))
         except NoSuchElementException:
             print("email signup button not there, so skipping")
