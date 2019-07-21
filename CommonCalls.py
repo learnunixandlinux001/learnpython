@@ -419,7 +419,7 @@ def login(driver, loginusername, loginpassword):
     driver.get('http://www.udemy.com')
     sleep(random.randint(10, 15))
     # Click Login button
-    loginButtonEl = driver.find_element_by_xpath("//button[@data-purpose='header-login']")
+    loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
     driver.execute_script("arguments[0].scrollIntoView();", loginButtonEl)
     action = ActionChains(driver)
     action.move_to_element(loginButtonEl).click().perform()
