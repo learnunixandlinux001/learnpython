@@ -16,3 +16,4 @@ pip3 install unidecode
 sudo apt install -y tor
 sudo cp ~/Downloads/geckodriver-v0.24.0-linux64/geckodriver /usr/local/bin
 sudo chmod 777 /usr/local/bin/geckodriver
+crontab cronconfig.txt
