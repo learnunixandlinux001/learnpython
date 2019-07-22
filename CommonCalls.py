@@ -50,7 +50,7 @@ cursor = connection.cursor()
 #
 #
 def getCredsForCurrentStage(runMode):
-    print("Entering getCredsForCurrentStage")
+    #print("Entering getCredsForCurrentStage")
     try:
         sql = ""
 
@@ -69,11 +69,23 @@ def getCredsForCurrentStage(runMode):
         cursor.execute(sql)
         result = cursor.fetchall()
         email = result[0]['email']
+
+        #gap between enrolment and rating should be atleast 1 day to bypass bot filter
+        sql="select(TIMESTAMPDIFF(DAY, (select completed from work.`tasks` where `stage`='ENROLMENT' and `status`='success' and `email`='"+email+"' order by completed limit 1),now())) as diffdays"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        diffdays = result[0]['diffdays']
+        diffdays = int(diffdays)
+        #print("diffdays:"+str(diffdays))
+        if(diffdays==0):
+            print("This id was just enrolled today. Should not rate today itself")
+            return ("","")
+
         sql = "SELECT `passwd` FROM `creds` where `email`='" + email + "' order by RAND() limit 1"
         cursor.execute(sql)
         result = cursor.fetchall()
         passwd = result[0]['passwd']
-        print("Exited getCredsForCurrentStage")
+        #print("Exited getCredsForCurrentStage")
     except Exception as e:
         print("Exception in getCredsForCurrentStage. Returning blank creds")
         return ("", "")
@@ -403,7 +415,14 @@ def watchVideo(driver):
         fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
 
         allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
-        weightageList = [1, 1, 2, 2, 3, 16, 75]
+
+        sql = "SELECT `configvalue` FROM `configs` where `configname`='RATINGSPLIT'"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        weightageSplitStr = result[0]['configvalue']
+        weightageList = weightageSplitStr.split(",")
+        weightageList = list(map(int, weightageList))
+
         ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
         if random.choices([True, False], [75, 25], k=1)[0]:
             driver.execute_script("arguments[0].click();", ratingToBeGiven)
@@ -544,22 +563,44 @@ def watchSpecificVideo(driver, authorName):
         nextVideoRightAngler.click()
     except NoSuchElementException:
         print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
-    try:
-        leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
-        driver.execute_script("arguments[0].click();", leaveRatingEl)
-        sleep(2)
 
-        twoEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
-        twoandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2.5-label")]')
-        threeEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3-label")]')
-        threeandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3.5-label")]')
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
-        fourandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4.5-label")]')
-        fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
+    sql = "SELECT `configvalue` FROM `configs` where `configname`='SPECIFICRATINGSPLIT'"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    willDoPercent = result[0]['configvalue']
+    willDoPercent = int(willDoPercent)
+    willNotDoPercent = 100 - willDoPercent
+    #print('willNotdo Percent:'+ str(willNotDoPercent))
+    #Not everyone leaves a rating, those who enrolled in my course. Most of them will leave :-)
 
-        allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
-        weightageList = [1, 1, 2, 2, 3, 16, 75]
-        ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
-        driver.execute_script("arguments[0].click();", ratingToBeGiven)
-    except NoSuchElementException:
-        print("Leave rating button not found. Maybe rating already given?")
+    if random.choices([True, False], [willDoPercent, willNotDoPercent], k=1)[0]:
+
+        try:
+
+            twoEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
+            twoandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2.5-label")]')
+            threeEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3-label")]')
+            threeandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3.5-label")]')
+            fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
+            fourandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4.5-label")]')
+            fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
+
+            allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
+
+            sql = "SELECT `configvalue` FROM `configs` where `configname`='RATINGSPLIT'"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            weightageSplitStr = result[0]['configvalue']
+            weightageList = weightageSplitStr.split(",")
+            weightageList = list(map(int, weightageList))
+
+            ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
+            #print("rating to be given:"+ratingToBeGiven.get_attribute("data-purpose"))
+
+
+            leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
+            driver.execute_script("arguments[0].click();", leaveRatingEl)
+            sleep(2)
+            driver.execute_script("arguments[0].click();", ratingToBeGiven)
+        except NoSuchElementException:
+            print("Leave rating button not found. Maybe rating already given?")

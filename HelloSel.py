@@ -36,7 +36,7 @@ while True:
 
     runMode = random.choices(allTasks, taskSplitList, k=1)[0]
 
-    # runMode = 'WATCHVIDEO'
+    #runMode = 'SPECIFIC'
 
     print("runMode is:" + runMode)
 
