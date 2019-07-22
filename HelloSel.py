@@ -17,12 +17,21 @@ connection = pymysql.connect(host='work.ciu1thdpia44.us-east-2.rds.amazonaws.com
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
-specificKeywordList = ["regular expressions", "regex", "regular expressions concepts", "regular expressions exercises"]
-authorName = "Sujith George"
+cursor = connection.cursor()
 
 while True:
 
-    cursor = connection.cursor()
+
+    sql = "SELECT `configvalue` FROM `configs` where `configname`='SPECIFICSEARCHTERMS'"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    specificKeywordCommaSepString = result[0]['configvalue']
+    specificKeywordList = specificKeywordCommaSepString.split(",")
+
+    
+    #specificKeywordList = ["regular expressions", "regex", "regular expressions concepts","regular expressions exercises"]
+    authorName = "Sujith George"
+
 
     sql = "SELECT `configvalue` FROM `configs` where `configname`='TASKSPLIT'"
 
