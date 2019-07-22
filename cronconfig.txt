@@ -1,3 +1,4 @@
 PATH=/home/ubuntu/.local/bin:/home/ubuntu/.local/bin:/home/ubuntu/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 * * * * * ~/learnpython/restart.sh 1>~/learnpython/cronlogs 2>~/learnpython/cronlogs 0>~/learnpython/cronlogs
+* */1 * * * ~/learnpython/dumbrestart.sh 1>~/learnpython/cronlogs 2>~/learnpython/cronlogs 0>~/learnpython/cronlogs
 
