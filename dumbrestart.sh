@@ -2,7 +2,7 @@
 export DISPLAY=:0
 cd ~/learnpython
 pid=$(ps -ef|grep -v grep|grep HelloSel|awk '{print $2}')
-echo "pid is: $pid"
+echo "pid is : $pid"
 if [ ! -z "$pid" ] 
 then
 echo "Needs a restart!"
