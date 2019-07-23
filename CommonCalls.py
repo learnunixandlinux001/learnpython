@@ -606,7 +606,7 @@ def watchSpecificVideo(driver, authorName, loginusername):
 
             ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
             ratingText = ratingToBeGiven.get_attribute("data-purpose")
-            #print("rating to be given:"+ratingToBeGiven.get_attribute("data-purpose"))
+            print("rating text:"+ratingText)
 
 
             leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
@@ -615,7 +615,9 @@ def watchSpecificVideo(driver, authorName, loginusername):
             driver.execute_script("arguments[0].click();", ratingToBeGiven)
             sleep(3)
             sql = "INSERT into `ratings` values('" + loginusername + "','" + ratingText + "','" + "original" + "',now())"
+            print("before insert into rating table")
             cursor.execute(sql)
+            print("after insert into rating table")
 
 
         except NoSuchElementException:
