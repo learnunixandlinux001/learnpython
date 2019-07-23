@@ -615,10 +615,10 @@ def watchSpecificVideo(driver, authorName, loginusername):
             driver.execute_script("arguments[0].click();", ratingToBeGiven)
             sleep(3)
             sql = "INSERT into `ratings` values('" + loginusername + "','" + ratingText + "','" + "original" + "',now())"
-            print("before insert into rating table")
+            print("before insert into rating table:"+sql)
             cursor.execute(sql)
             print("after insert into rating table")
-
+            connection.commit()
 
         except NoSuchElementException:
             print("Leave rating button not found. Maybe rating already given?")
