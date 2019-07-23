@@ -100,7 +100,7 @@ while True:
         if (runMode == 'SPECIFIC'):
             CommonCalls.login(driver, loginusername, loginpassword)
             CommonCalls.specificEnroll(driver, specificKeywordList, authorName)
-            CommonCalls.watchSpecificVideo(driver, authorName)
+            CommonCalls.watchSpecificVideo(driver, authorName, loginusername)
 
         sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now(),'"+instanceid+"')"
         print("generic success sql:" + sql)

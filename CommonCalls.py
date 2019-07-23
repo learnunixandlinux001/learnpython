@@ -517,7 +517,7 @@ def specificEnroll(driver, specificKeywordList, authorName):
 # Watch video from among enrolled courses
 #
 #
-def watchSpecificVideo(driver, authorName):
+def watchSpecificVideo(driver, authorName, loginusername):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
     myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
@@ -605,6 +605,7 @@ def watchSpecificVideo(driver, authorName):
             weightageList = list(map(int, weightageList))
 
             ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
+            ratingText = ratingToBeGiven.get_attribute("data-purpose")
             #print("rating to be given:"+ratingToBeGiven.get_attribute("data-purpose"))
 
 
@@ -612,5 +613,10 @@ def watchSpecificVideo(driver, authorName):
             driver.execute_script("arguments[0].click();", leaveRatingEl)
             sleep(2)
             driver.execute_script("arguments[0].click();", ratingToBeGiven)
+            sleep(3)
+            sql = "INSERT into `ratings` values('" + loginusername + "','" + ratingText + "','" + "original" + "',now())"
+            cursor.execute(sql)
+
+
         except NoSuchElementException:
             print("Leave rating button not found. Maybe rating already given?")
