@@ -14,7 +14,7 @@ f = open("db.txt","r")
 hostStr = f.readline().rstrip('\n')
 userStr = f.readline().rstrip('\n')
 passwordStr = f.readline().rstrip('\n')
-dbStr = f.readline()cp `
+dbStr = f.readline().rstrip('\n')
 
 
 connection = pymysql.connect(host=hostStr,
