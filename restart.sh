@@ -2,7 +2,7 @@
 export DISPLAY=:0
 cd ~/learnpython
 pid=$(ps -ef|grep -v grep|grep HelloSel|awk '{print $2}')
-echo "pid is: $pid"
+echo "pid is:  $pid"
 numlines=$(git pull|wc -l)
 echo "numlines is $numlines"
 if [ -z "$pid" ] || [ "$numlines" != "1" ]
