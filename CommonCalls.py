@@ -42,6 +42,9 @@ userStr2 = f2.readline().rstrip('\n')
 passwordStr2 = f2.readline().rstrip('\n')
 dbStr2 = f2.readline().rstrip('\n')
 
+instfile = open("instance.txt","r")
+instanceid = instfile.readline()
+
 
 connection = pymysql.connect(host=hostStr2,
                              user=userStr2,
@@ -273,7 +276,7 @@ def freshSignUp(driver):
         print("Sql:" + sql)
         cursor.execute(sql)
 
-        sql = "INSERT into `tasks` values('" + completeEmailId + "','ENROLMENT','" + "success" + "',now())"
+        sql = "INSERT into `tasks` values('" + completeEmailId + "','ENROLMENT','" + "success" + "',now(),'"+instanceid+"')"
         print("Sql:" + sql)
         cursor.execute(sql)
         connection.commit()
@@ -287,7 +290,7 @@ def freshSignUp(driver):
 
     except Exception as excp:
         sql = "INSERT into `tasks` values('" + completeEmailId + "','ERROR-ENROLMENT','" + "failed:" + traceback.format_exc().replace(
-            "'", '"') + "',now())"
+            "'", '"') + "',now(),'"+instanceid+"')"
         print("Sql:" + sql)
         cursor.execute(sql)
         connection.commit()

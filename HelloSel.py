@@ -16,6 +16,9 @@ userStr = f.readline().rstrip('\n')
 passwordStr = f.readline().rstrip('\n')
 dbStr = f.readline().rstrip('\n')
 
+instfile = open("instance.txt","r")
+instanceid = instfile.readline()
+
 
 connection = pymysql.connect(host=hostStr,
                              user=userStr,
@@ -99,14 +102,14 @@ while True:
             CommonCalls.specificEnroll(driver, specificKeywordList, authorName)
             CommonCalls.watchSpecificVideo(driver, authorName)
 
-        sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now())"
+        sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now(),'"+instanceid+"')"
         print("generic success sql:" + sql)
         cursor.execute(sql)
         connection.commit()
 
     except Exception as excp:
         sql = "INSERT into `tasks` values('" + loginusername + "','ERROR-" + runMode + "','" + "failed:" + traceback.format_exc().replace(
-            "'", '"') + "',now())"
+            "'", '"') + "',now(),'"+instanceid+"')"
         print("generic exception catch sql:" + sql)
         cursor.execute(sql)
         connection.commit()

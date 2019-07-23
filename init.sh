@@ -7,6 +7,9 @@ tar -xvf tor-browser-linux64-8.5.4_en-US.tar.xz -C ~/Downloads/tor-browser-linux
 mkdir ~/Downloads/geckodriver-v0.24.0-linux64
 tar -xvf geckodriver-v0.24.0-linux64.tar.gz -C ~/Downloads/geckodriver-v0.24.0-linux64
 cd ~/learnpython
+echo 'UNABLE'>instance.txt
+INSTANCEID=`wget -qO- http://instance-data/latest/meta-data/instance-id`
+echo $INSTANCEID>instance.txt
 sudo apt-get update
 sudo apt update
 sudo apt install -y python3
