@@ -10,10 +10,17 @@ from time import sleep
 import CommonCalls
 import traceback
 
-connection = pymysql.connect(host='work.ciu1thdpia44.us-east-2.rds.amazonaws.com',
-                             user='sujithgeorge',
-                             password='hotmail143',
-                             db='work',
+f = open("db.txt","r")
+hostStr = f.readline().rstrip('\n')
+userStr = f.readline().rstrip('\n')
+passwordStr = f.readline().rstrip('\n')
+dbStr = f.readline()cp `
+
+
+connection = pymysql.connect(host=hostStr,
+                             user=userStr,
+                             password=passwordStr,
+                             db=dbStr,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
@@ -28,7 +35,7 @@ while True:
     specificKeywordCommaSepString = result[0]['configvalue']
     specificKeywordList = specificKeywordCommaSepString.split(",")
 
-    
+
     #specificKeywordList = ["regular expressions", "regex", "regular expressions concepts","regular expressions exercises"]
     authorName = "Sujith George"
 

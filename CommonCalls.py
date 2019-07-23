@@ -36,10 +36,17 @@ emailIdPostFixes = ["", "", "", "eng", "", "", "", "", "", "", "", "off", "", ""
 
 emailIdMidFixes = [".", "_", "-", ".0.", "__", "-_", ".", ".", "1", ".and.", "_0_", "x", ".x1", "", ".us.", ".y."]
 
-connection = pymysql.connect(host='work.ciu1thdpia44.us-east-2.rds.amazonaws.com',
-                             user='sujithgeorge',
-                             password='hotmail143',
-                             db='work',
+f2 = open("db.txt","r")
+hostStr2 = f2.readline().rstrip('\n')
+userStr2 = f2.readline().rstrip('\n')
+passwordStr2 = f2.readline().rstrip('\n')
+dbStr2 = f2.readline().rstrip('\n')
+
+
+connection = pymysql.connect(host=hostStr2,
+                             user=userStr2,
+                             password=passwordStr2,
+                             db=dbStr2,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 
