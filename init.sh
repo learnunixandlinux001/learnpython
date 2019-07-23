@@ -2,8 +2,10 @@
 cd ~/Downloads
 wget https://www.torproject.org/dist/torbrowser/8.5.4/tor-browser-linux64-8.5.4_en-US.tar.xz
 wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
-tar -xvf tor-browser-linux64-8.5.4_en-US.tar.xz tor-browser_en-US/
-tar -xvf geckodriver-v0.24.0-linux64.tar.gz
+mkdir ~/Downloads/tor-browser-linux64-8.5.4_en-US
+tar -xvf tor-browser-linux64-8.5.4_en-US.tar.xz -C ~/Downloads/tor-browser-linux64-8.5.4_en-US  
+mkdir ~/Downloads/geckodriver-v0.24.0-linux64
+tar -xvf geckodriver-v0.24.0-linux64.tar.gz -C ~/Downloads/geckodriver-v0.24.0-linux64
 cd ~/learnpython
 sudo apt-get update
 sudo apt update
