@@ -3,6 +3,10 @@ export DISPLAY=:0
 cd ~/learnpython
 pid=$(ps -ef|grep -v grep|grep HelloSel|awk '{print $2}')
 echo "pid is : $pid"
+echo "Attempting to clear tmp without killing..."
+cd /tmp
+sudo rm -rf *
+cd ~/learnpython
 if [ ! -z "$pid" ] 
 then
 echo "Needs a restart!"
