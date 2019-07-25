@@ -104,12 +104,10 @@ while True:
 
         if (runMode == 'UPGRADE'):
             CommonCalls.upgrade(driver)
-            continue
-
-
+            
         sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now(),'"+instanceid+"')"
         print("generic success sql:" + sql)
-        cursor.execute(sql)
+        #cursor.execute(sql)
         connection.commit()
 
     except Exception as excp:
