@@ -103,11 +103,17 @@ while True:
             CommonCalls.watchSpecificVideo(driver, authorName, loginusername)
 
         if (runMode == 'UPGRADE'):
-            CommonCalls.upgrade(driver)
+            CommonCalls.login(driver, loginusername, loginpassword)
+            CommonCalls.upgrade(driver,authorName)
 
         sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now(),'"+instanceid+"')"
         print("generic success sql:" + sql)
-        #cursor.execute(sql)
+
+        if (runMode == 'UPGRADE'):
+            sql = "UPDATE `ratings` set type='upgraded' where `email`='" + loginusername + "'"
+            print("overridden sql because of upgrade scenario:"+sql)
+
+        cursor.execute(sql)
         connection.commit()
 
     except Exception as excp:

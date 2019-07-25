@@ -639,7 +639,79 @@ def watchSpecificVideo(driver, authorName, loginusername):
 # Upgrade ratings
 #
 #
-def upgrade(driver):
+def upgrade(driver,authorName):
     print(" in upgrade func")
+    driver.get("http://www.udemy.com")
+    sleep(random.randint(10, 15))
+    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
+    myCoursesTopLinkEl.click()
+    sleep(random.randint(10, 15))
+    try:
+        sortByDropDown = driver.find_element_by_xpath('//button[@id="sort-dropdown-label"]')
+        driver.execute_script("arguments[0].click();", sortByDropDown)
+        sleep(1)
+        recentlyEnrolledOption = driver.find_element_by_xpath('//span[text()="Recently Enrolled"]')
+        driver.execute_script("arguments[0].click();", recentlyEnrolledOption)
+        sleep(random.randint(5, 10))
+    except NoSuchElementException:
+        print("no sort drop down in 'My Courses'. Too less courses probably.")
 
+    latestEnrolledCourse = driver.find_element_by_xpath('//div[contains(text(),"' + authorName + '")]')
+    driver.execute_script("arguments[0].scrollIntoView();", latestEnrolledCourse)
+    try:
+        dismissPopupEl = driver.find_element_by_xpath('//small[contains(@ng-click,"dismiss")]')
+        dismissPopupEl.click()
+        sleep(1)
+    except NoSuchElementException:
+        print("No angular popup in my course page found")
+    # Play course!
+    sleep(2)
+    driver.execute_script("arguments[0].click();", latestEnrolledCourse)
+    sleep(random.randint(10, 15))
+    try:
+        modalPopupEl = driver.find_element_by_xpath('//div[contains(@class,"modal")]//button[@class="close"]')
+        modalPopupEl.click()
+        sleep(1)
+    except NoSuchElementException:
+        print("No modal window in course play page")
+
+    try:
+        initialPlayButton = driver.find_element_by_xpath('//div[contains(@data-purpose,"play-button")]')
+        initialPlayButton.click()
+    except NoSuchElementException:
+        print("No Play button found on page")
+    listOfSectionExpanders = driver.find_elements_by_xpath('//div[contains(@class,"section-heading")]//span[contains(@class,"angle-down")]')
+    for sectionExpander in listOfSectionExpanders:
+        driver.execute_script("arguments[0].scrollIntoView();", sectionExpander)
+        sectionExpander.click()
+    try:
+        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
+        nextVideoRightAngler.click()
+    except NoSuchElementException:
+        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
+    allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
+    for progressCheckBox in allProgressCheckBoxes:
+        sleep(random.randint(2, 4))
+        if random.choices([True, False], [80, 20], k=1)[0]:
+            driver.execute_script("arguments[0].click();", progressCheckBox)
+    try:
+        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
+        nextVideoRightAngler.click()
+    except NoSuchElementException:
+        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
+
+    try:
+        editRatingEl = driver.find_element_by_xpath('//span[contains(text(),"Edit your rating")]')
+        driver.execute_script("arguments[0].click();", editRatingEl)
+        sleep(2)
+        editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
+        driver.execute_script("arguments[0].click();", editRatingSecondButtonEl)
+        sleep(2)
+        fiveratingToBeGivenEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
+        print("rating text:" + str(fiveratingToBeGivenEl.get_attribute("data-purpose")))
+        driver.execute_script("arguments[0].click();", fiveratingToBeGivenEl)
+        sleep(3)
+
+    except NoSuchElementException:
+        print("Edit rating button not found")
 
