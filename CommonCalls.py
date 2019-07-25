@@ -7,6 +7,7 @@ from unidecode import unidecode
 import random
 from time import sleep
 from datetime import datetime
+from math import floor
 import traceback
 
 searchKeywords = ["java", "java programming", "linux", "unix", "python", "python programming", "java", "web",
@@ -75,6 +76,18 @@ def getCredsForCurrentStage(runMode):
 
         if (runMode == 'SPECIFIC'):
             sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO'  and `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='SPECIFIC') order by RAND() limit 1"
+
+        if (runMode == 'UPGRADE'):
+            sql = "SELECT `configvalue` FROM `configs` where `configname`='EXCLUDEFORUPGRADE'"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            upgradeExcludeStartingLettersStr = result[0]['configvalue']
+            #print("upgradeExcludeStartingLettersStr:" + upgradeExcludeStartingLettersStr)
+            upgradeExcludeStartingLettersList = list(upgradeExcludeStartingLettersStr)
+            commaSepChars = ','.join("'{0}'".format(letter) for letter in upgradeExcludeStartingLettersList)
+            #print("commaSepChars:" + commaSepChars)
+            sql = "SELECT `email` FROM `ratings` where (`rating` like '%-3-%' OR `rating` like '%-3.5-%' OR `rating` like '%-4-%') AND type='original' AND LEFT(`email`,1) NOT IN (" + commaSepChars + ") order by rand() LIMIT 1"
+            #print("upgrade sql:" + sql)
 
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -622,3 +635,11 @@ def watchSpecificVideo(driver, authorName, loginusername):
 
         except NoSuchElementException:
             print("Leave rating button not found. Maybe rating already given?")
+
+# Upgrade ratings
+#
+#
+def upgrade(driver):
+    print(" in upgrade func")
+
+

@@ -45,7 +45,7 @@ while True:
 
     sql = "SELECT `configvalue` FROM `configs` where `configname`='TASKSPLIT'"
 
-    allTasks = ["ENROLMENT", "BROWSE", "WATCHVIDEO", "SPECIFIC"]
+    allTasks = ["ENROLMENT", "BROWSE", "WATCHVIDEO", "SPECIFIC", "UPGRADE"]
 
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -55,7 +55,7 @@ while True:
 
     runMode = random.choices(allTasks, taskSplitList, k=1)[0]
 
-    #runMode = 'SPECIFIC'
+    #runMode = 'UPGRADE'
 
     print("runMode is:" + runMode)
 
@@ -101,6 +101,11 @@ while True:
             CommonCalls.login(driver, loginusername, loginpassword)
             CommonCalls.specificEnroll(driver, specificKeywordList, authorName)
             CommonCalls.watchSpecificVideo(driver, authorName, loginusername)
+
+        if (runMode == 'UPGRADE'):
+            CommonCalls.upgrade(driver)
+            continue
+
 
         sql = "INSERT into `tasks` values('" + loginusername + "','" + runMode + "','" + "success" + "',now(),'"+instanceid+"')"
         print("generic success sql:" + sql)
