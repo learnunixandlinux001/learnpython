@@ -61,7 +61,7 @@ cursor = connection.cursor()
 #
 #
 def getCredsForCurrentStage(runMode):
-    #print("Entering getCredsForCurrentStage")
+    print("Entering getCredsForCurrentStage")
     try:
         sql = ""
 
@@ -82,12 +82,12 @@ def getCredsForCurrentStage(runMode):
             cursor.execute(sql)
             result = cursor.fetchall()
             upgradeExcludeStartingLettersStr = result[0]['configvalue']
-            #print("upgradeExcludeStartingLettersStr:" + upgradeExcludeStartingLettersStr)
+            print("upgradeExcludeStartingLettersStr:" + upgradeExcludeStartingLettersStr)
             upgradeExcludeStartingLettersList = list(upgradeExcludeStartingLettersStr)
             commaSepChars = ','.join("'{0}'".format(letter) for letter in upgradeExcludeStartingLettersList)
-            #print("commaSepChars:" + commaSepChars)
+            print("commaSepChars:" + commaSepChars)
             sql = "SELECT `email` FROM `ratings` where (`rating` like '%-3-%' OR `rating` like '%-3.5-%' OR `rating` like '%-4-%') AND type='original' AND LEFT(`email`,1) NOT IN (" + commaSepChars + ") order by rand() LIMIT 1"
-            #print("upgrade sql:" + sql)
+            print("upgrade sql:" + sql)
 
         cursor.execute(sql)
         result = cursor.fetchall()
@@ -108,7 +108,7 @@ def getCredsForCurrentStage(runMode):
         cursor.execute(sql)
         result = cursor.fetchall()
         passwd = result[0]['passwd']
-        #print("Exited getCredsForCurrentStage")
+        print("Exited getCredsForCurrentStage")
     except Exception as e:
         print("Exception in getCredsForCurrentStage. Returning blank creds")
         return ("", "")
