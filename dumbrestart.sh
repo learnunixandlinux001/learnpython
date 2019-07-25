@@ -18,7 +18,7 @@ cd /tmp
 sudo rm -rf *
 cd ~/learnpython
 echo "Starting up now...."
-python3 HelloSel.py 1>logs.out 2>logs.out 0>logs.out & 
+python3 HelloSel.py 1>>logs.out 2>>logs.out 0>>logs.out & 
 echo "...success"
 fi 
 
