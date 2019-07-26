@@ -69,7 +69,7 @@ def getCredsForCurrentStage(runMode):
             return ("", "")
 
         if (runMode == 'BROWSE'):
-            sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='ENROLMENT'  and `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE') order by RAND() limit 1"
+            sql = "SELECT distinct `email` FROM `creds` where `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE') order by RAND() limit 1"
 
         if (runMode == 'WATCHVIDEO'):
             sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE'  and `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO') order by RAND() limit 1"
