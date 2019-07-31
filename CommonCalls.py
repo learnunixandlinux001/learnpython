@@ -93,16 +93,17 @@ def getCredsForCurrentStage(runMode):
         result = cursor.fetchall()
         email = result[0]['email']
 
-        #gap between enrolment and rating should be atleast 1 day to bypass bot filter
-        sql="select(TIMESTAMPDIFF(DAY, (select completed from work.`tasks` where `stage`='ENROLMENT' and `status`='success' and `email`='"+email+"' order by completed limit 1),now())) as diffdays"
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        diffdays = result[0]['diffdays']
-        diffdays = int(diffdays)
-        #print("diffdays:"+str(diffdays))
-        if(diffdays==0):
-            print("This id was just enrolled today. Should not rate today itself")
-            return ("","")
+        if (runMode == 'SPECIFIC'):
+            #gap between enrolment and rating should be atleast 1 day to bypass bot filter
+            sql="select(TIMESTAMPDIFF(DAY, (select completed from work.`tasks` where `stage`='ENROLMENT' and `status`='success' and `email`='"+email+"' order by completed limit 1),now())) as diffdays"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            diffdays = result[0]['diffdays']
+            diffdays = int(diffdays)
+            #print("diffdays:"+str(diffdays))
+            if(diffdays==0):
+                print("This id was just enrolled today. Should not rate today itself")
+                return ("","")
 
         sql = "SELECT `passwd` FROM `creds` where `email`='" + email + "' order by RAND() limit 1"
         cursor.execute(sql)
