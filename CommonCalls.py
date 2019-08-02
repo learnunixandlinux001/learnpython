@@ -451,6 +451,8 @@ def login(driver, loginusername, loginpassword):
         driver.execute_script("arguments[0].click();", loginButtonEl)
     except NoSuchElementException:
         driver.get('http://www.google.com')
+        sleep(random.randint(10, 15))
+        driver.delete_all_cookies()
         driver.get('http://www.udemy.com')
         sleep(random.randint(10, 15))
         loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
