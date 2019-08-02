@@ -484,10 +484,13 @@ def specificEnroll(driver, specificKeywordList, authorName):
         sleep(random.randint(2, 4))
         driver.execute_script("arguments[0].scrollIntoView();", englishFilterEl)
         driver.execute_script("arguments[0].click();", englishFilterEl)
-        freeFilterEl = driver.find_element_by_xpath('//span[contains(@class,"toggle-control")]//span[text()="Free"]')
-        driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
-        driver.execute_script("arguments[0].click();", freeFilterEl)
-        sleep(random.randint(2, 4))
+        try:
+            freeFilterEl = driver.find_element_by_xpath('//span[contains(@class,"toggle-control")]//span[text()="Free"]')
+            driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
+            driver.execute_script("arguments[0].click();", freeFilterEl)
+            sleep(random.randint(2, 4))
+        except NoSuchElementException:
+            print("free checkbox not found")
         applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
         driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
         applyButtonEl.click()
