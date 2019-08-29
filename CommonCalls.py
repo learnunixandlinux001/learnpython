@@ -86,7 +86,7 @@ def getCredsForCurrentStage(runMode):
             upgradeExcludeStartingLettersList = list(upgradeExcludeStartingLettersStr)
             commaSepChars = ','.join("'{0}'".format(letter) for letter in upgradeExcludeStartingLettersList)
             print("commaSepChars:" + commaSepChars)
-            sql = "SELECT `email` FROM `ratings` where (`rating` like '%-3-%' OR `rating` like '%-3.5-%' OR `rating` like '%-4-%') AND type='original' AND LEFT(`email`,1) NOT IN (" + commaSepChars + ") order by rand() LIMIT 1"
+            sql = "SELECT `email` FROM `ratings` where (`rating` like '%-3-%' OR `rating` like '%-3.5-%' OR `rating` like '%-4-%') AND type='original' AND LEFT(`email`,1) NOT IN (" + commaSepChars + ") AND timestampdiff(DAY,completed,now())>=1 order by rand() LIMIT 1"
             print("upgrade sql:" + sql)
 
         cursor.execute(sql)
