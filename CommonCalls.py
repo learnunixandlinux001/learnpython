@@ -321,13 +321,17 @@ def memberBrowseAndEnroll(driver):
         sleep(random.randint(2, 4))
         driver.execute_script("arguments[0].scrollIntoView();", englishFilterEl)
         driver.execute_script("arguments[0].click();", englishFilterEl)
-        freeFilterEl = driver.find_element_by_xpath('//span[contains(@class,"toggle-control")]//span[text()="Free"]')
-        driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
-        driver.execute_script("arguments[0].click();", freeFilterEl)
-        sleep(random.randint(2, 4))
-        applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
-        driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
-        applyButtonEl.click()
+        try:
+            freeFilterEl = driver.find_element_by_xpath('//span[contains(@class,"toggle-control")]//span[text()="Free"]')
+            driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
+            driver.execute_script("arguments[0].click();", freeFilterEl)
+            sleep(random.randint(2, 4))
+            applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
+            driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
+            applyButtonEl.click()
+        except NoSuchElementException:
+            print("free checkbox not found")
+            driver.get(driver.current_url+"&price=price-free")
         sleep(random.randint(10, 15))
     if random.choice([True, False]):
         try:
@@ -344,6 +348,8 @@ def memberBrowseAndEnroll(driver):
     driver.execute_script("arguments[0].scrollIntoView();", interestedResult)
     sleep(random.randint(3, 4))
     driver.execute_script("arguments[0].click();", interestedResult)
+    if len(driver.window_handles) > 1:
+        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
     sleep(random.randint(5, 10))
     try:
         addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
@@ -475,7 +481,7 @@ def specificEnroll(driver, specificKeywordList, authorName):
     topSearchFieldEl.send_keys(random.choice(specificKeywordList))
     topSearchFieldEl.send_keys(Keys.RETURN)
     sleep(random.randint(10, 15))
-    if random.choice([True, False]):
+    if True:
         filterButtonEl = driver.find_element_by_xpath('//button[contains(@class,"filter")]/span[text()="All Filters"]')
         filterButtonEl.click()
         sleep(random.randint(2, 4))
@@ -489,11 +495,13 @@ def specificEnroll(driver, specificKeywordList, authorName):
             driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
             driver.execute_script("arguments[0].click();", freeFilterEl)
             sleep(random.randint(2, 4))
+            applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
+            driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
+            applyButtonEl.click()
         except NoSuchElementException:
             print("free checkbox not found")
-        applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
-        driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
-        applyButtonEl.click()
+            driver.get(driver.current_url+"&price=price-free")
+
         sleep(random.randint(10, 15))
     try:
         specificResult = driver.find_element_by_xpath('//span[contains(text(),"By ' + authorName + '")]')
@@ -511,7 +519,9 @@ def specificEnroll(driver, specificKeywordList, authorName):
     sleep(random.randint(3, 4))
     driver.execute_script("arguments[0].click();", specificResult)
     sleep(random.randint(5, 10))
-    enrollNowEl = driver.find_element_by_xpath("//button[@data-purpose='buy-this-course-button']")
+    if len(driver.window_handles) > 1:
+        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
+    enrollNowEl = driver.find_elements_by_xpath("//button[@data-purpose='buy-this-course-button']")[0]
     driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
     enrollNowEl.click()
     sleep(random.randint(10, 15))
