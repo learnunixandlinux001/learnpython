@@ -348,9 +348,9 @@ def memberBrowseAndEnroll(driver):
     driver.execute_script("arguments[0].scrollIntoView();", interestedResult)
     sleep(random.randint(3, 4))
     driver.execute_script("arguments[0].click();", interestedResult)
+    sleep(random.randint(5, 10))
     if len(driver.window_handles) > 1:
         driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
-    sleep(random.randint(5, 10))
     try:
         addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
         driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
