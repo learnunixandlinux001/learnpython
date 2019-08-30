@@ -546,7 +546,9 @@ def watchSpecificVideo(driver, authorName, loginusername):
         driver.execute_script("arguments[0].click();", recentlyEnrolledOption)
         sleep(random.randint(5, 10))
     except NoSuchElementException:
-        print("no sort drop down in 'My Courses'. Too less courses probably.")
+        print("no sort drop down in 'My Courses'. Too less courses probably. Lets append url.")
+        driver.get(driver.current_url + "?sort=-enroll_time")
+        sleep(random.randint(10,15))
 
     latestEnrolledCourse = driver.find_element_by_xpath('//div[contains(text(),"' + authorName + '")]')
     driver.execute_script("arguments[0].scrollIntoView();", latestEnrolledCourse)
@@ -656,7 +658,9 @@ def upgrade(driver,authorName):
         driver.execute_script("arguments[0].click();", recentlyEnrolledOption)
         sleep(random.randint(5, 10))
     except NoSuchElementException:
-        print("no sort drop down in 'My Courses'. Too less courses probably.")
+        print("no sort drop down in 'My Courses'. Too less courses probably. Lets append url.")
+        driver.get(driver.current_url + "?sort=-enroll_time")
+        sleep(random.randint(10, 15))
 
     latestEnrolledCourse = driver.find_element_by_xpath('//div[contains(text(),"' + authorName + '")]')
     driver.execute_script("arguments[0].scrollIntoView();", latestEnrolledCourse)
