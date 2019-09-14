@@ -66,7 +66,7 @@ while True:
     #print("Using the creds:"+loginusername+":::::"+loginpassword)
 
     try:
-        driver = TorBrowserDriver("/home/ubuntu/Downloads/tor-browser-linux64-8.5.4_en-US/tor-browser_en-US")
+        driver = TorBrowserDriver("/home/ubuntu/Downloads/tor-browser-linux64-8.5.5_en-US/tor-browser_en-US")
         print("Created a driver successfully!")
     except Exception:
         traceback.print_exc()
