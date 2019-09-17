@@ -370,7 +370,7 @@ def memberBrowseAndEnroll(driver):
 def watchVideo(driver):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
-    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
+    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
     myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
     listOfEnrolledCourses = driver.find_elements_by_xpath('//div[contains(@class,"card")]//div[@class="play-button"]')
@@ -535,7 +535,7 @@ def specificEnroll(driver, specificKeywordList, authorName):
 def watchSpecificVideo(driver, authorName, loginusername):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
-    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
+    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
     myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
     try:
@@ -647,7 +647,7 @@ def upgrade(driver,authorName):
     print(" in upgrade func")
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
-    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-courses']")
+    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
     myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
     try:
