@@ -658,7 +658,7 @@ def upgrade(driver,authorName):
         driver.execute_script("arguments[0].click();", recentlyEnrolledOption)
         sleep(random.randint(5, 10))
     except NoSuchElementException:
-        print("no sort drop down in 'My Courses'. Too less courses probably. Lets append url.")
+        print("no sort drop down in 'My  Courses'. Too less courses probably. Lets append url.")
         driver.get(driver.current_url + "?sort=-enroll_time")
         sleep(random.randint(10, 15))
 
