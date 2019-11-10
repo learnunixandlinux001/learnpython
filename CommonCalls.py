@@ -442,7 +442,7 @@ def watchVideo(driver):
         weightageList = list(map(int, weightageList))
 
         ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
-        if random.choices([True, False], [75, 25], k=1)[0]:
+        if random.choices([True, False], [10, 90], k=1)[0]:
             driver.execute_script("arguments[0].click();", ratingToBeGiven)
     except NoSuchElementException:
         print("Leave rating button not found. Maybe rating already given?")
