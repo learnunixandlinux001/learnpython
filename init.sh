@@ -5,7 +5,7 @@ wget https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodrive
 mkdir ~/Downloads/tor-browser-linux64-9.0.2_en-US
 tar -xvf tor-browser-linux64-9.0.2_en-US.tar.xz -C ~/Downloads/tor-browser-linux64-9.0.2_en-US  
 mkdir ~/Downloads/geckodriver-v0.24.0-linux64
-tar -xvf geckodriver-v0.24.0-linux64.tar.gz -C ~/Downloads/geckodriver-v0.24.0-linux64
+tar -xvf geckodriver-v0.24.0-linux64.tar.gz -C ~/Downloads/geckodriver-v0.26.0-linux64
 cd ~/learnpython
 echo 'UNABLE'>instance.txt
 INSTANCEID=`wget -qO- http://instance-data/latest/meta-data/instance-id`
