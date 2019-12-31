@@ -57,7 +57,7 @@ connection = pymysql.connect(host=hostStr2,
 cursor = connection.cursor()
 
 
-# users fit for current stage
+# pick users fit for current stage
 #
 #
 def getCredsForCurrentStage(runMode):
@@ -70,6 +70,9 @@ def getCredsForCurrentStage(runMode):
 
         if (runMode == 'BROWSE'):
             sql = "SELECT distinct `email` FROM `creds` where `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE') order by RAND() limit 1"
+
+        if (runMode == 'ENLIST'):
+            sql = "SELECT distinct `email` FROM `creds` where `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='ENLIST') order by RAND() limit 1"
 
         if (runMode == 'WATCHVIDEO'):
             sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE'  and `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO') order by RAND() limit 1"
@@ -95,77 +98,6 @@ def getCredsForCurrentStage(runMode):
     return (email, passwd)
 
 
-# before a fresh signup
-#
-#
-def beforeSignUp(driver):
-    driver.get("http:///wwww.udemy.com")
-    sleep(random.randint(10, 15))
-
-    if random.choice([True, False]):
-        browseCategoriesEl = driver.find_element_by_xpath("//a[@id='header.browse']")
-        action = ActionChains(driver)
-        action.move_to_element(browseCategoriesEl).send_keys(Keys.ALT).perform()
-        sleep(random.randint(1, 2))
-        firstLevelMenuItems = driver.find_elements_by_xpath(
-            "//ul[@class='dropdown-menu__list dropdown-menu__list--level-one']/li")
-        firstLevelMenuItemsSize = len(firstLevelMenuItems)
-        interestedFirstLevelMenu = firstLevelMenuItems[random.randint(0, firstLevelMenuItemsSize - 1)]
-        action = ActionChains(driver)
-        action.move_to_element(interestedFirstLevelMenu).send_keys(Keys.ALT).perform()
-        sleep(random.randint(4, 5))
-        secondLevelMenuItems = driver.find_elements_by_xpath(
-            "//ul[@class='dropdown-menu__list dropdown-menu__list--level-two']/li")
-        secondLevelMenuItemsSize = len(secondLevelMenuItems)
-        interestedSecondLevelMenu = secondLevelMenuItems[random.randint(0, secondLevelMenuItemsSize - 1)]
-        action = ActionChains(driver)
-        action.move_to_element(interestedSecondLevelMenu).send_keys(Keys.ALT).perform()
-        sleep(random.randint(2, 3))
-        interestedSecondLevelMenu.click()
-        sleep(random.randint(10, 15))
-        udemyTopLogoEl = driver.find_element_by_xpath("//img[@class='udemy-logo']")
-        driver.execute_script("arguments[0].scrollIntoView();", udemyTopLogoEl)
-        udemyTopLogoEl.click()
-        sleep(random.randint(10, 15))
-
-    # search using top search field, select one results, look at one course landing page, come back
-    if random.choice([True, False]):
-        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
-        action = ActionChains(driver)
-        action.move_to_element(topSearchFieldEl).click().perform()
-        sleep(1)
-        topSearchFieldEl.send_keys(random.choice(searchKeywords))
-        topSearchFieldEl.send_keys(Keys.RETURN)
-        sleep(random.randint(10, 15))
-        searchResults = driver.find_elements_by_xpath("//h4")
-        searchResultsSize = len(searchResults)
-        interestedResult = searchResults[random.randint(0, searchResultsSize - 1)]
-        action = ActionChains(driver)
-        driver.execute_script("arguments[0].scrollIntoView();", interestedResult)
-        sleep(random.randint(3, 4))
-        action.move_to_element(interestedResult).click().perform()
-        sleep(random.randint(6, 15))
-        udemyTopLogoEl = driver.find_element_by_xpath("//img[@class='udemy-logo']")
-        driver.execute_script("arguments[0].scrollIntoView();", udemyTopLogoEl)
-        udemyTopLogoEl.click()
-        sleep(random.randint(10, 15))
-
-    # scroll down and side scroll through some courses by clicking right arrow button
-    if random.choice([True, False]):
-        rightArrowElements = driver.find_elements_by_xpath("//button[@class='carousel-arrow next']")
-        rightArrowElementsSize = len(rightArrowElements)
-        interestedRightArrow = rightArrowElements[random.randint(0, rightArrowElementsSize - 1)]
-        driver.execute_script("arguments[0].scrollIntoView();", interestedRightArrow)
-        sleep(random.randint(1, 4))
-        action = ActionChains(driver)
-        action.move_to_element(interestedRightArrow).click().perform()
-        sleep(random.randint(10, 15))
-        udemyTopLogoEl = driver.find_element_by_xpath("//img[@class='udemy-logo']")
-        driver.execute_script("arguments[0].scrollIntoView();", udemyTopLogoEl)
-        udemyTopLogoEl.click()
-        sleep(random.randint(10, 15))
-
-
 # for a fresh signup
 #
 #
@@ -178,37 +110,7 @@ def freshSignUp(driver):
         firstName = result[0]['firstname']
         lastName = result[0]['lastname']
 
-        #Some randomisation logic, and dealing with some special chars etc...
-        firstNameAllLower = str.lower(firstName)
-        firstNameFirstThree = firstNameAllLower[:2]
-        firstNameFirst = firstNameAllLower[0]
-        lastNameAllLower = str.lower(lastName)
-        lastNameFirstThree = lastNameAllLower[:1]
-        lastNameFirst = lastNameAllLower[0]
-        selectedFirstNamePart = [firstNameAllLower, firstName]
-        selectedLastNamePart = [lastNameAllLower, lastName]
-        combinedEmailId = random.choice(selectedFirstNamePart) + random.choice(
-            emailIdMidFixes) + random.choice(selectedLastNamePart) + random.choice(emailIdPostFixes)
-        if (len(combinedEmailId) < 8):
-            combinedEmailId = combinedEmailId + str(random.randint(10, 99))
-        completeEmailId = combinedEmailId + "@" + random.choice(emailDomains)
-        combinedName = random.choice(selectedFirstNamePart) + " " + random.choice(
-            selectedLastNamePart)
-        if (len(combinedName) < 5):
-            combinedName = combinedName + firstNameAllLower
-        password = random.choice(selectedLastNamePart) + random.choice(emailIdPostFixes) + random.choice(
-            emailIdPostFixes) + random.choice(emailIdMidFixes)
-        if (len(password) < 6):
-            password = password + random.choice(selectedLastNamePart) + random.choice(
-                selectedLastNamePart) + random.choice(emailIdPostFixes) + random.choice(selectedFirstNamePart) + 'abc'
-        password = password.replace(" ", "")
-        completeEmailId = completeEmailId.replace(" ", "")
-        completeEmailId = unidecode(completeEmailId)
-        password = unidecode(password)
-        combinedName.replace("'", "")
-        completeEmailId.replace("'", "")
-        password.replace("'", "")
-        #...End radomisation logic
+        (combinedName,completeEmailId,password) = randomizeSignupData(firstName, lastName)
 
         print("Name:" + combinedName)
         print("Email:" + completeEmailId)
@@ -276,9 +178,7 @@ def freshSignUp(driver):
         connection.commit()
 
 
-# after signing up
-#
-#
+# Browse through and enroll. Free filter disappeared, so might need to pick random free courses from the database of free course urls
 def memberBrowseAndEnroll(driver):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
@@ -290,27 +190,6 @@ def memberBrowseAndEnroll(driver):
     topSearchFieldEl.send_keys(random.choice(searchKeywords))
     topSearchFieldEl.send_keys(Keys.RETURN)
     sleep(random.randint(10, 15))
-    if random.choices([True, False], [95, 5], k=1)[0]:
-        filterButtonEl = driver.find_element_by_xpath('//button[contains(@class,"filter")]/span[text()="All Filters"]')
-        filterButtonEl.click()
-        sleep(random.randint(2, 4))
-        englishFilterEl = driver.find_element_by_xpath(
-            '//span[contains(@class,"toggle-control")]//span[text()="English"]')
-        sleep(random.randint(2, 4))
-        driver.execute_script("arguments[0].scrollIntoView();", englishFilterEl)
-        driver.execute_script("arguments[0].click();", englishFilterEl)
-        try:
-            freeFilterEl = driver.find_element_by_xpath('//span[contains(@class,"toggle-control")]//span[text()="Free"]')
-            driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
-            driver.execute_script("arguments[0].click();", freeFilterEl)
-            sleep(random.randint(2, 4))
-            applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
-            driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
-            applyButtonEl.click()
-        except NoSuchElementException:
-            print("free checkbox not found")
-            driver.get(driver.current_url+"&price=price-free")
-        sleep(random.randint(10, 15))
     if random.choice([True, False]):
         try:
             nextPage = driver.find_element_by_xpath('//ul[contains(@class,"pagination")]/li/a[contains(text(),2)]')
@@ -319,16 +198,13 @@ def memberBrowseAndEnroll(driver):
         except NoSuchElementException:
             print("Page 2 does not exist for this search")
         sleep(random.randint(10, 15))
-    searchResults = driver.find_elements_by_xpath("//h4")
-    searchResultsSize = len(searchResults)
-    interestedResult = searchResults[random.randint(0, searchResultsSize - 1)]
-    action = ActionChains(driver)
-    driver.execute_script("arguments[0].scrollIntoView();", interestedResult)
-    sleep(random.randint(3, 4))
-    driver.execute_script("arguments[0].click();", interestedResult)
-    sleep(random.randint(5, 10))
-    if len(driver.window_handles) > 1:
-        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
+    #basically ignore everything done till now! And directly go to a free course url picked from a database.
+    #The bastards took out the free course filter button, so we can't browse and reach a free course now, have to hit URL directly.
+    sql = "SELECT `courseurl` FROM `freecourses` order by rand() limit 1"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    editedCourseUrl = result[0]['courseurl'].replace("learn/","")
+    driver.get(editedCourseUrl)
     try:
         addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
         driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
@@ -342,9 +218,6 @@ def memberBrowseAndEnroll(driver):
     sleep(random.randint(10, 15))
 
 
-# Watch video from among enrolled courses
-#
-#
 def watchVideo(driver):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
@@ -354,16 +227,25 @@ def watchVideo(driver):
     listOfEnrolledCourses = driver.find_elements_by_xpath('//div[contains(@class,"card")]//div[@class="play-button"]')
     numEnrolledCoursesInCurrPage = len(listOfEnrolledCourses)
     interestedEnrolledCourse = listOfEnrolledCourses[random.randint(0, numEnrolledCoursesInCurrPage - 1)]
-    driver.execute_script("arguments[0].scrollIntoView();", interestedEnrolledCourse)
-    try:
-        dismissPopupEl = driver.find_element_by_xpath('//small[contains(@ng-click,"dismiss")]')
-        dismissPopupEl.click()
-        sleep(1)
-    except NoSuchElementException:
-        print("No angular popup in my course page found")
-    # Play course!
-    sleep(2)
-    driver.execute_script("arguments[0].click();", interestedEnrolledCourse)
+    humanWatch(driver, interestedEnrolledCourse, '')
+    firstTimeRate(driver)
+
+
+# Watch video for a particular course
+def humanWatch(driver, interestedEnrolledCourse, courseurl):
+    if(courseurl!=''):
+        driver.get("http://www.udemy.com/course/" + courseurl + "/learn")
+    else:
+        driver.execute_script("arguments[0].scrollIntoView();", interestedEnrolledCourse)
+        try:
+            dismissPopupEl = driver.find_element_by_xpath('//small[contains(@ng-click,"dismiss")]')
+            dismissPopupEl.click()
+            sleep(1)
+        except NoSuchElementException:
+            print("No angular popup in my course page found")
+        # Play course!
+        sleep(2)
+        driver.execute_script("arguments[0].click();", interestedEnrolledCourse)
     sleep(random.randint(10, 15))
     try:
         modalPopupEl = driver.find_element_by_xpath('//div[contains(@class,"modal")]//button[@class="close"]')
@@ -371,7 +253,6 @@ def watchVideo(driver):
         sleep(1)
     except NoSuchElementException:
         print("No modal window in course play page")
-
     try:
         initialPlayButton = driver.find_element_by_xpath('//div[contains(@data-purpose,"play-button")]')
         initialPlayButton.click()
@@ -381,6 +262,7 @@ def watchVideo(driver):
         '//div[contains(@class,"section-heading")]//span[contains(@class,"angle-down")]')
     for sectionExpander in listOfSectionExpanders:
         driver.execute_script("arguments[0].scrollIntoView();", sectionExpander)
+        sleep(1)
         sectionExpander.click()
     try:
         nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
@@ -388,42 +270,53 @@ def watchVideo(driver):
     except NoSuchElementException:
         print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
     allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
+    if(len(allProgressCheckBoxes)>51):
+        allProgressCheckBoxes = allProgressCheckBoxes[0,50]
+
     for progressCheckBox in allProgressCheckBoxes:
-        sleep(random.randint(2, 4))
-        if random.choice([True, False]):
+        sleep(random.randint(1, 2))
+        if random.choices([True, False], [80, 20], k=1)[0]:
             driver.execute_script("arguments[0].click();", progressCheckBox)
     try:
         nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
         nextVideoRightAngler.click()
     except NoSuchElementException:
         print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
+
+def firstTimeRate(driver):
     try:
         leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
         driver.execute_script("arguments[0].click();", leaveRatingEl)
         sleep(2)
-
-        twoEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
-        twoandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2.5-label")]')
-        threeEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3-label")]')
-        threeandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3.5-label")]')
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
-        fourandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4.5-label")]')
-        fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
-
-        allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
-
-        sql = "SELECT `configvalue` FROM `configs` where `configname`='RATINGSPLIT'"
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        weightageSplitStr = result[0]['configvalue']
-        weightageList = weightageSplitStr.split(",")
-        weightageList = list(map(int, weightageList))
-
-        ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
+        ratingToBeGiven = getRatingToBeGiven(driver)
+        #Rate only some courses, that is human behaviour
         if random.choices([True, False], [10, 90], k=1)[0]:
             driver.execute_script("arguments[0].click();", ratingToBeGiven)
     except NoSuchElementException:
         print("Leave rating button not found. Maybe rating already given?")
+
+
+def getRatingToBeGiven(driver):
+    twoEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
+    twoandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2.5-label")]')
+    threeEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3-label")]')
+    threeandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3.5-label")]')
+    fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
+    fourandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4.5-label")]')
+    fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
+
+    allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
+
+    sql = "SELECT `configvalue` FROM `configs` where `configname`='RATINGSPLIT'"
+    cursor.execute(sql)
+    result = cursor.fetchall()
+    weightageSplitStr = result[0]['configvalue']
+    weightageList = weightageSplitStr.split(",")
+    weightageList = list(map(int, weightageList))
+
+    ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
+
+    return ratingToBeGiven
 
 
 def login(driver, loginusername, loginpassword):
@@ -519,45 +412,12 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
 #
 #
 def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
-    driver.get("http://www.udemy.com/course/"+courseurl+"/learn")
-    sleep(random.randint(10, 15))
+    humanWatch(driver,'',courseurl)
     try:
-        modalPopupEl = driver.find_element_by_xpath('//div[contains(@class,"modal")]//button[@class="close"]')
-        modalPopupEl.click()
-        sleep(1)
-    except NoSuchElementException:
-        print("No modal window in course play page")
-    try:
-        initialPlayButton = driver.find_element_by_xpath('//div[contains(@data-purpose,"play-button")]')
-        initialPlayButton.click()
-    except NoSuchElementException:
-        print("No Play button found on page")
-    listOfSectionExpanders = driver.find_elements_by_xpath(
-        '//div[contains(@class,"section-heading")]//span[contains(@class,"angle-down")]')
-    for sectionExpander in listOfSectionExpanders:
-        driver.execute_script("arguments[0].scrollIntoView();", sectionExpander)
-        sectionExpander.click()
-    try:
-        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
-        nextVideoRightAngler.click()
-    except NoSuchElementException:
-        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
-    allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
-    for progressCheckBox in allProgressCheckBoxes:
-        sleep(random.randint(2, 4))
-        #Watches approximately half the videos in the course
-        if random.choice([True, False]):
-            driver.execute_script("arguments[0].click();", progressCheckBox)
-    try:
-        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
-        nextVideoRightAngler.click()
-    except NoSuchElementException:
-        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
-
-    try:
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
         leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
         driver.execute_script("arguments[0].click();", leaveRatingEl)
+        sleep(2)
+        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
         sleep(2)
         driver.execute_script("arguments[0].click();", fourEl)
         sleep(3)
@@ -576,41 +436,7 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
 # Upgrade ratings
 #
 #
-def upgradeRating(driver, selectedCourseKey, courseurl):
-    driver.get("http://www.udemy.com/course/" + courseurl + "/learn")
-    sleep(random.randint(10, 15))
-    try:
-        modalPopupEl = driver.find_element_by_xpath('//div[contains(@class,"modal")]//button[@class="close"]')
-        modalPopupEl.click()
-        sleep(1)
-    except NoSuchElementException:
-        print("No modal window in course play page")
-    try:
-        initialPlayButton = driver.find_element_by_xpath('//div[contains(@data-purpose,"play-button")]')
-        initialPlayButton.click()
-    except NoSuchElementException:
-        print("No Play button found on page")
-    listOfSectionExpanders = driver.find_elements_by_xpath('//div[contains(@class,"section-heading")]//span[contains(@class,"angle-down")]')
-    for sectionExpander in listOfSectionExpanders:
-        driver.execute_script("arguments[0].scrollIntoView();", sectionExpander)
-        sectionExpander.click()
-    try:
-        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
-        nextVideoRightAngler.click()
-    except NoSuchElementException:
-        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
-    allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
-    for progressCheckBox in allProgressCheckBoxes:
-        sleep(random.randint(2, 4))
-        #when leaving row rating, videos are watched 50%, now lets make it 80% watched. The more watched, the more preference algorithm gives
-        if random.choices([True, False], [80, 20], k=1)[0]:
-            driver.execute_script("arguments[0].click();", progressCheckBox)
-    try:
-        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
-        nextVideoRightAngler.click()
-    except NoSuchElementException:
-        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
-
+def editRating(driver):
     try:
         editRatingEl = driver.find_element_by_xpath('//span[contains(text(),"Edit your rating")]')
         driver.execute_script("arguments[0].click();", editRatingEl)
@@ -618,31 +444,29 @@ def upgradeRating(driver, selectedCourseKey, courseurl):
         editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
         driver.execute_script("arguments[0].click();", editRatingSecondButtonEl)
         sleep(2)
-
-        twoEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
-        twoandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2.5-label")]')
-        threeEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3-label")]')
-        threeandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3.5-label")]')
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
-        fourandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4.5-label")]')
-        fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
-
-        allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
-
-        sql = "SELECT `configvalue` FROM `configs` where `configname`='RATINGSPLIT'"
-        cursor.execute(sql)
-        result = cursor.fetchall()
-        weightageSplitStr = result[0]['configvalue']
-        weightageList = weightageSplitStr.split(",")
-        weightageList = list(map(int, weightageList))
-
-        ratingToBeGiven = random.choices(allRatingsList, weightageList, k=1)[0]
+        ratingToBeGiven = getRatingToBeGiven(driver)
         driver.execute_script("arguments[0].click();", ratingToBeGiven)
         sleep(3)
-
     except NoSuchElementException:
         print("Edit rating button not found")
 
+
+def upgradeRating(driver, selectedCourseKey, courseurl):
+    humanWatch(driver, '', courseurl)
+    editRating(driver)
+
+
+
+def logout(driver):
+    driver.get('http://www.udemy.com/user/logout')
+    sleep(5)
+    # Click Login button. TO make sure browser doesn't remember previous login, we should select 'Login as a different user'
+    loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+    driver.execute_script("arguments[0].click();", loginButtonEl)
+    sleep(random.randint(10, 15))
+    loginAsDifferentUserEl = driver.find_element_by_xpath("//a[@class='cancel-link']")
+    driver.execute_script("arguments[0].click();", loginAsDifferentUserEl)
+    sleep(2)
 
 def rate(driver):
     sql = "SELECT `keyword`,`boostratio` FROM `course-instructors` order by keyword"
@@ -658,18 +482,22 @@ def rate(driver):
     boostratioList = list(map(int, boostratioList))
     selectedCourseKey = random.choices(coursekeyList, boostratioList, k=1)[0]
     print("selectedCourseKey:"+selectedCourseKey)
-    sql = "SELECT `instructorid`,`instructorname`,`courseurl` FROM `course-instructors` where keyword='" + selectedCourseKey + "'"
+    sql = "SELECT `instructorid`,`instructorname`,`courseurl`,`mode`,`maxdailyreviews` FROM `course-instructors` where keyword='" + selectedCourseKey + "'"
     cursor.execute(sql)
     result = cursor.fetchall()
     instructorid = result[0]['instructorid']
     instructorname = result[0]['instructorname']
     courseurl = result[0]['courseurl']
+    mode = result[0]['mode']
+    maxdailyreviews = result[0]['maxdailyreviews']
     print("instructorid:"+instructorid)
     print("instructorname:" + instructorname)
     print("courseurl:" + courseurl)
+    print("mode:" + mode)
+    print("maxdailyreviews:" + maxdailyreviews)
 
     #First phase. Lets upgrade a couple of low ratings from previous days
-    sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='ratedlow' AND timestampdiff(DAY,lowratingdate,now())>=1 order by rand() LIMIT 2"
+    sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='ratedlow' AND timestampdiff(DAY,lowratingdate,now())>=1 order by rand() LIMIT 1"
     cursor.execute(sql)
     result = cursor.fetchall()
     for row in result:
@@ -682,27 +510,93 @@ def rate(driver):
         print("Upgrade done, going to update rating table with:" + sql)
         cursor.execute(sql)
         connection.commit()
+        logout(driver)
 
-    #Second phase. Lets leave a 4 star rating by picking a user who has still not rated
-    sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='unrated' order by rand() LIMIT 1"
+    #Second phase. Lets leave a 4 star rating by picking a user who has still not rated, if mode is UPGRADESONLY, skip this.
+    #Max 3 reviews at a time , waiting to get upgraded. We don't want to exhaust our number of unrated bots.
+    sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='unrated' and (select count(*) from `"+selectedCourseKey+"_creds` where ratingstatus='ratedlow')<3 order by rand() LIMIT 1"
+
     cursor.execute(sql)
     result = cursor.fetchall()
-    try:
+
+    if(len(result)==0):
+        raise Exception("You have probably hit the daily review limit for now. As soon as existing low ratings get upgraded, you can push in new ratings.")
+    else:
         loginusername = result[0]['email']
         loginpassword = result[0]['passwd']
-        print("watch video and leave low 4 star rating for user:"+loginusername+" and passwd:"+loginpassword)
-        login(driver, loginusername, loginpassword)
+    if (loginusername == ''):
+        raise Exception("Unable to get rater creds")
 
-        watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey,courseurl)
-        sql = "UPDATE `" + selectedCourseKey + "_creds` set ratingstatus='ratedlow', lowratingdate=now() where email='"+loginusername+"'"
-        print("Low rating done, going to update rating table with:" + sql)
-        cursor.execute(sql)
-        connection.commit()
-    except Exception:
-        print("No more unrated enrollers available for this course. You might want to enrol more people")
+    if (mode == 'UPGRADESONLY'):
+        print("mode is UPGRADESONLY. So will not do any new ratings")
+        return loginusername
+
+    print("watch video and leave low 4 star rating for user:"+loginusername+" and passwd:"+loginpassword)
+    login(driver, loginusername, loginpassword)
+    watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl)
+    sql = "UPDATE `" + selectedCourseKey + "_creds` set ratingstatus='ratedlow', lowratingdate=now() where email='" + loginusername + "'"
+    print("Low rating done, going to update rating table with:" + sql)
+    cursor.execute(sql)
+    connection.commit()
     #returning this value, so that a record for this can be inserted into the TASKS table. Note that only the low rating task will be inserted.
     # the upgrades will not have a corresponding record in the TASKS table.
     return loginusername
 
 
+def enlist(driver):
+    driver.get("http://www.udemy.com")
+    sleep(random.randint(10, 15))
+    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
+    myCoursesTopLinkEl.click()
+    sleep(random.randint(10, 15))
+    listOfEnrolledCourses = driver.find_elements_by_xpath('//a[contains(@class,"card--learning__details")]')
+    numEnrolledCoursesInCurrPage = len(listOfEnrolledCourses)
+    for course in listOfEnrolledCourses:
+        print(course.get_attribute("href"))
+        href=course.get_attribute("href")
+        sql = "SELECT `courseurl` FROM `freecourses` where `courseurl`='" + href + "' limit 1"
+        cursor.execute(sql)
+        result = cursor.fetchall()
+        if (len(result)==0):
+            print('inserting new free course url')
+            sql = "INSERT into `freecourses` values('" + href + "')"
+            cursor.execute(sql)
+            connection.commit()
+        else:
+            print('existing free course url, will skip inserting')
+
+#randomize signup data
+def randomizeSignupData(firstName, lastName):
+    # Some randomisation logic, and dealing with some special chars etc...
+    firstNameAllLower = str.lower(firstName)
+    firstNameFirstThree = firstNameAllLower[:2]
+    firstNameFirst = firstNameAllLower[0]
+    lastNameAllLower = str.lower(lastName)
+    lastNameFirstThree = lastNameAllLower[:1]
+    lastNameFirst = lastNameAllLower[0]
+    selectedFirstNamePart = [firstNameAllLower, firstName]
+    selectedLastNamePart = [lastNameAllLower, lastName]
+    combinedEmailId = random.choice(selectedFirstNamePart) + random.choice(
+        emailIdMidFixes) + random.choice(selectedLastNamePart) + random.choice(emailIdPostFixes)
+    if (len(combinedEmailId) < 8):
+        combinedEmailId = combinedEmailId + str(random.randint(10, 99))
+    completeEmailId = combinedEmailId + "@" + random.choice(emailDomains)
+    combinedName = random.choice(selectedFirstNamePart) + " " + random.choice(
+        selectedLastNamePart)
+    if (len(combinedName) < 5):
+        combinedName = combinedName + firstNameAllLower
+    password = random.choice(selectedLastNamePart) + random.choice(emailIdPostFixes) + random.choice(
+        emailIdPostFixes) + random.choice(emailIdMidFixes)
+    if (len(password) < 6):
+        password = password + random.choice(selectedLastNamePart) + random.choice(
+            selectedLastNamePart) + random.choice(emailIdPostFixes) + random.choice(selectedFirstNamePart) + 'abc'
+    password = password.replace(" ", "")
+    completeEmailId = completeEmailId.replace(" ", "")
+    completeEmailId = unidecode(completeEmailId)
+    password = unidecode(password)
+    combinedName.replace("'", "")
+    completeEmailId.replace("'", "")
+    password.replace("'", "")
+    return (combinedName,completeEmailId,password)
+    # ...End radomisation logic
 
