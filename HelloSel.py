@@ -88,7 +88,12 @@ while True:
         traceback.print_exc()
 
     # This will cause a browser window to open
-    driver.implicitly_wait(15)
+    try:
+        driver.implicitly_wait(15)
+    except Exception:
+        traceback.print_exc()
+        sleep(5)
+        continue
 
     # The login user name , password will be derived from data dump in the names table
     # Once an enrolment is completed, a record will be inserted into the creds table with the credentials.

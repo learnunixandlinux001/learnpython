@@ -2,7 +2,7 @@ from tbselenium.tbdriver import TorBrowserDriver
 from selenium.webdriver.common.action_chains import ActionChains
 import pymysql.cursors
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, ElementClickInterceptedException
 from unidecode import unidecode
 import random
 from time import sleep
@@ -263,12 +263,15 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
     for sectionExpander in listOfSectionExpanders:
         driver.execute_script("arguments[0].scrollIntoView();", sectionExpander)
         sleep(1)
-        sectionExpander.click()
+        try:
+            sectionExpander.click()
+        except ElementClickInterceptedException:
+            print("Unable to expand section. something blocking the UI. Maybe customer care chat?")
     try:
         nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
         nextVideoRightAngler.click()
-    except NoSuchElementException:
-        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
+    except (ElementClickInterceptedException,NoSuchElementException) as e:
+        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?OR maybe customer chat iframe is obscuring")
     allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
     if(len(allProgressCheckBoxes)>51):
         allProgressCheckBoxes = allProgressCheckBoxes[0,50]
@@ -280,8 +283,8 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
     try:
         nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
         nextVideoRightAngler.click()
-    except NoSuchElementException:
-        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?")
+    except (ElementClickInterceptedException, NoSuchElementException) as e:
+        print("Right next button not present on initial video. Maybe its a quiz or coding exercise?OR maybe customer chat iframe is obscuring")
 
 def firstTimeRate(driver):
     try:
@@ -496,7 +499,7 @@ def rate(driver):
     print("mode:" + mode)
     print("maxdailyreviews:" + maxdailyreviews)
 
-    #First phase. Lets upgrade a couple of low ratings from previous days
+    #First phase. Lets upgrade a low rating from previous days if any
     sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='ratedlow' AND timestampdiff(DAY,lowratingdate,now())>=1 order by rand() LIMIT 1"
     cursor.execute(sql)
     result = cursor.fetchall()
@@ -514,7 +517,7 @@ def rate(driver):
 
     #Second phase. Lets leave a 4 star rating by picking a user who has still not rated, if mode is UPGRADESONLY, skip this.
     #Max 3 reviews at a time , waiting to get upgraded. We don't want to exhaust our number of unrated bots.
-    sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='unrated' and (select count(*) from `"+selectedCourseKey+"_creds` where ratingstatus='ratedlow')<3 order by rand() LIMIT 1"
+    sql = "SELECT `email`,`passwd` FROM `"+selectedCourseKey+"_creds` where ratingstatus='unrated' and (select count(*) from `"+selectedCourseKey+"_creds` where ratingstatus='ratedlow')<"+maxdailyreviews+" order by rand() LIMIT 1"
 
     cursor.execute(sql)
     result = cursor.fetchall()
