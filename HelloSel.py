@@ -1,5 +1,11 @@
+import signal
+import subprocess
 from tbselenium.tbdriver import TorBrowserDriver
 import tbselenium.common as cm
+import psutil
+from selenium import webdriver
+from subprocess import Popen
+from subprocess import call
 from tbselenium.utils import launch_tbb_tor_with_stem
 from selenium.webdriver.common.action_chains import ActionChains
 import pymysql.cursors
@@ -11,6 +17,7 @@ import time
 from time import sleep
 import CommonCalls
 import traceback
+import os
 
 # The email for the AWS account that hosts the DB is forawsrds@gmail.com. Pass is Hotnum ('H' caps)
 # We should ideally use only the free tier, so this account should not need any bill payment or any maintenance
@@ -35,6 +42,9 @@ connection = pymysql.connect(host=hostStr,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 cursor = connection.cursor()
+dir = r"D:\Users\admin\Desktop\TorButton"
+cmdline = "run.bat"
+p = Popen("start cmd /K " + cmdline, cwd=dir, shell=True)
 
 # Infinite loop. Keeps going as per ratio of task allocation by RUNMODE given in configs table
 while True:
@@ -70,28 +80,37 @@ while True:
     print("Using the creds (doesnt apply if runmode is RATING):" + loginusername + "<====>" + loginpassword)
 
     try:
-        launch_tbb_tor_with_stem(
-            "D:\\Users\\admin\\Desktop\\Tor Browser")  # I think you can remove this, but maybe some future usages need that
-        driver = TorBrowserDriver("D:\\Users\\admin\\Desktop\\Tor Browser", tor_cfg=cm.USE_STEM)
+        #launch_tbb_tor_with_stem("D:\\Users\\admin\\Desktop\\Tor Browser")  # I think you can remove this, but maybe some future usages need that
+        #driver = TorBrowserDriver("D:\\Users\\admin\\Desktop\\Tor Browser", tor_cfg=cm.USE_STEM)
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        options.add_extension('D:\\Hacked Onion Browser Button.crx')
+
+        #options.add_argument("user-data-dir=" +  "D:\\Users\\admin\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
+        driver = webdriver.Chrome("D:\\chromedriver.exe",options=options)
+
         print("Created a driver successfully!")
-        try:
-            driver.set_page_load_timeout(10)
-            driver.get("http://www.google.com")
-            driver.set_page_load_timeout(40)
-        except TimeoutException:
-            driver.delete_all_cookies()
-            driver.quit()
-            sleep(5)
-            continue
+
 
     except Exception:
         traceback.print_exc()
+        driver.delete_all_cookies()
+        driver.quit()
+        sleep(5)
+        continue
 
     # This will cause a browser window to open
     try:
         driver.implicitly_wait(15)
+        driver.maximize_window()
+        sleep(5)
+        if len(driver.window_handles) > 1:
+            driver.switch_to.window(driver.window_handles[0])
     except Exception:
         traceback.print_exc()
+        driver.delete_all_cookies()
+        driver.quit()
         sleep(5)
         continue
 
@@ -120,11 +139,10 @@ while True:
         if (runMode == 'BROWSE'):
             CommonCalls.login(driver, loginusername, loginpassword)
             # Browse through and enroll in 1 or 2 courses. Increase this number below if you need to.
-            for i in range(random.randint(1, 2)):
-                CommonCalls.memberBrowseAndEnroll(driver)
-                # Not everyone who enrolls will watch immediately. So lets randomise.
-                if random.choices([True, False], [10, 90], k=1)[0]:
-                    CommonCalls.watchVideo(driver)
+            CommonCalls.memberBrowseAndEnroll(driver)
+            # Changed my decision.Lets just browse while in browse mode, lets not watch video, so commenting
+            #if random.choices([True, False], [10, 90], k=1)[0]:
+            #   CommonCalls.watchVideo(driver)
 
         if (runMode == 'ENLIST'):
             CommonCalls.login(driver, loginusername, loginpassword)

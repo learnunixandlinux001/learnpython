@@ -164,11 +164,7 @@ def freshSignUp(driver):
         connection.commit()
 
         # Re-use the browse method. You are signed in now anyways.
-        # TODO increase
-        for i in range(random.randint(1, 2)):
-            memberBrowseAndEnroll(driver)
-            if random.choice([True, False]):
-                watchVideo(driver)
+        memberBrowseAndEnroll(driver)
 
     except Exception as excp:
         sql = "INSERT into `tasks` values('" + completeEmailId + "','ERROR-ENROLMENT','" + "failed:" + traceback.format_exc().replace(
@@ -180,7 +176,6 @@ def freshSignUp(driver):
 
 # Browse through and enroll. Free filter disappeared, so might need to pick random free courses from the database of free course urls
 def memberBrowseAndEnroll(driver):
-    driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
     # After signinup up, search using top search field, select one results, look at one course landing page, come back
     topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
@@ -194,6 +189,7 @@ def memberBrowseAndEnroll(driver):
         try:
             nextPage = driver.find_element_by_xpath('//ul[contains(@class,"pagination")]/li/a[contains(text(),2)]')
             driver.execute_script("arguments[0].scrollIntoView();", nextPage)
+            sleep(2)
             nextPage.click()
         except NoSuchElementException:
             print("Page 2 does not exist for this search")
@@ -204,17 +200,23 @@ def memberBrowseAndEnroll(driver):
     cursor.execute(sql)
     result = cursor.fetchall()
     editedCourseUrl = result[0]['courseurl'].replace("learn/","")
+    print("going to hit free course url: "+editedCourseUrl)
+    sleep(2)
     driver.get(editedCourseUrl)
+    sleep(5)
     try:
-        addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
-        driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
-        addToCartEl.click()
-    except NoSuchElementException:
         enrollNowEl = driver.find_element_by_xpath("//button[@data-purpose='buy-this-course-button']")
-        driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
+        # driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
+        sleep(2)
         enrollNowEl.click()
-    sleep(random.randint(10, 15))
-    driver.get("http://www.udemy.com")
+        sleep(2)
+    except NoSuchElementException:
+        addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
+        sleep(2)
+        driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
+        sleep(2)
+        addToCartEl.click()
+        sleep(2)
     sleep(random.randint(10, 15))
 
 
@@ -547,7 +549,6 @@ def rate(driver):
 
 
 def enlist(driver):
-    driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
     myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
     myCoursesTopLinkEl.click()
