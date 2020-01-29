@@ -325,6 +325,7 @@ def getRatingToBeGiven(driver):
 
 
 def login(driver, loginusername, loginpassword):
+    sleep(2)
     driver.get('http://www.udemy.com')
     sleep(random.randint(15, 20))
     # Click Login button
@@ -379,27 +380,12 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
             driver.get(driver.current_url+"&price=price-free")
 
         sleep(random.randint(10, 15))
-    try:
-        #TODO: CHANGE THIS!! Search by courseid
-        specificResult = driver.find_element_by_xpath('//span[contains(text(),"By ' + instructorname + '")]')
-    except NoSuchElementException:
-        try:
-            nextPage = driver.find_element_by_xpath('//ul[contains(@class,"pagination")]/li/a[contains(text(),2)]')
-            driver.execute_script("arguments[0].scrollIntoView();", nextPage)
-            nextPage.click()
-            sleep(random.randint(10, 15))
-            specificResult = driver.find_element_by_xpath('//span[contains(text(),"By ' + instructorname + '")]')
-        except NoSuchElementException:
-            print("Sujith is not there in Page 2 also!")
-    action = ActionChains(driver)
-    driver.execute_script("arguments[0].scrollIntoView();", specificResult)
-    sleep(random.randint(3, 4))
-    driver.execute_script("arguments[0].click();", specificResult)
-    sleep(random.randint(5, 10))
-    if len(driver.window_handles) > 1:
-        driver.switch_to.window(driver.window_handles[len(driver.window_handles)-1])
+
+    #last search term is considered the course url (after adding prefixes and postfixes added of course)
+    driver.get("http://www.udemy.com/course/" + specificKeywordList[len(specificKeywordList)-1] + "/learn")
+    sleep(3)
     enrollNowEl = driver.find_elements_by_xpath("//button[@data-purpose='buy-this-course-button']")[0]
-    driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
+    sleep(3)
     enrollNowEl.click()
     sleep(random.randint(10, 15))
     #first search term is considered prefix of table name: For e.g. if first term is solid, table name is considered as solid_creds
@@ -463,6 +449,7 @@ def upgradeRating(driver, selectedCourseKey, courseurl):
 
 
 def logout(driver):
+    sleep(5)
     driver.get('http://www.udemy.com/user/logout')
     sleep(5)
     # Click Login button. TO make sure browser doesn't remember previous login, we should select 'Login as a different user'
