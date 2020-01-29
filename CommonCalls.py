@@ -389,7 +389,7 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     enrollNowEl.click()
     sleep(random.randint(10, 15))
     #first search term is considered prefix of table name: For e.g. if first term is solid, table name is considered as solid_creds
-    sql = "INSERT into `"+ specificKeywordList[0] +"_creds` values('" + loginusername + "','" + loginpassword + "','" + "unrated" + "',now(),'','')"
+    sql = "INSERT into `"+ specificKeywordList[0] +"_creds` values('" + loginusername + "','" + loginpassword + "','" + "unrated" + "',now(),null,null)"
     print("before inserting into course specific creds table:" + sql)
     cursor.execute(sql)
     print("after inserting into course specific creds table")

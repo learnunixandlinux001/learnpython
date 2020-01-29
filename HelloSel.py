@@ -102,6 +102,7 @@ while True:
 
     # This will cause a browser window to open
     try:
+        print("before implicitly wait")
         driver.implicitly_wait(15)
         driver.maximize_window()
         sleep(5)
