@@ -42,7 +42,7 @@ connection = pymysql.connect(host=hostStr,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 cursor = connection.cursor()
-dir = r"D:\Users\admin\Desktop\TorButton"
+dir = r"D:\Users\admin\learnpython\TorButton"
 cmdline = "run.bat"
 p = Popen("start cmd /K " + cmdline, cwd=dir, shell=True)
 
@@ -85,10 +85,10 @@ while True:
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        options.add_extension('D:\\Hacked Onion Browser Button.crx')
+        options.add_extension('D:\\Users\\admin\\learnpython\\Hacked Onion Browser Button.crx')
 
         #options.add_argument("user-data-dir=" +  "D:\\Users\\admin\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
-        driver = webdriver.Chrome("D:\\chromedriver.exe",options=options)
+        driver = webdriver.Chrome("D:\\Users\\admin\\learnpython\\chromedriver.exe",options=options)
 
         print("Created a driver successfully!")
 
