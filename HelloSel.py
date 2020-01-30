@@ -42,7 +42,8 @@ connection = pymysql.connect(host=hostStr,
                              charset='utf8mb4',
                              cursorclass=pymysql.cursors.DictCursor)
 cursor = connection.cursor()
-dir = r"D:\Users\admin\learnpython\TorButton"
+winuser=os.getlogin()
+dir = "D:\\Users\\" + winuser + "\\learnpython\\TorButton"
 cmdline = "run.bat"
 p = Popen("start cmd /K " + cmdline, cwd=dir, shell=True)
 
@@ -85,18 +86,20 @@ while True:
         options = webdriver.ChromeOptions()
         options.add_experimental_option("excludeSwitches", ["enable-automation"])
         options.add_experimental_option('useAutomationExtension', False)
-        options.add_extension('D:\\Users\\admin\\learnpython\\Hacked Onion Browser Button.crx')
-
-        #options.add_argument("user-data-dir=" +  "D:\\Users\\admin\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
-        driver = webdriver.Chrome("D:\\Users\\admin\\learnpython\\chromedriver.exe",options=options)
+        options.add_extension('D:\\Users\\'+winuser+'\\learnpython\\Hacked Onion Browser Button.crx')
+        options.add_argument('no-sandbox')
+        driver = webdriver.Chrome('D:\\Users\\'+winuser+'\\learnpython\\chromedriver.exe',options=options)
 
         print("Created a driver successfully!")
 
 
     except Exception:
         traceback.print_exc()
-        driver.delete_all_cookies()
-        driver.quit()
+        try:
+            driver.delete_all_cookies()
+            driver.quit()
+        except Exception:
+            print("exception inside exception!")
         sleep(5)
         continue
 
