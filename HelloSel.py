@@ -20,14 +20,23 @@ import traceback
 import os
 import platform
 
-# The email for the AWS account that hosts the DB is forawsrds@gmail.com. Pass is Hotnum ('H' caps)
-# We should ideally use only the free tier, so this account should not need any bill payment or any maintenance
-# Just keep maintaining tables using MySQL client. You can get creds to access from MySQL by looking at the file db.txt
-f = open("db.txt", "r")
-hostStr = f.readline().rstrip('\n')
-userStr = f.readline().rstrip('\n')
-passwordStr = f.readline().rstrip('\n')
-dbStr = f.readline().rstrip('\n')
+def getDbConnection():
+    # The email for the AWS account that hosts the DB is forawsrds@gmail.com. Pass is Hotnum ('H' caps)
+    # We should ideally use only the free tier, so this account should not need any bill payment or any maintenance
+    # Just keep maintaining tables using MySQL client. You can get creds to access from MySQL by looking at the file db.txt
+    f = open("db.txt", "r")
+    hostStr = f.readline().rstrip('\n')
+    userStr = f.readline().rstrip('\n')
+    passwordStr = f.readline().rstrip('\n')
+    dbStr = f.readline().rstrip('\n')
+    # We take a separate connection in CommonCalls.py file, we don't pass the cursor along
+    connection = pymysql.connect(host=hostStr,
+                                 user=userStr,
+                                 password=passwordStr,
+                                 db=dbStr,
+                                 charset='utf8mb4',
+                                 cursorclass=pymysql.cursors.DictCursor)
+    return connection
 
 # we will log the instanceid in the task table.
 # When a ec2 box is setup, the instance id is populated and kept written in a file named instance.txt. Our startup scripts take care of this.
@@ -36,13 +45,7 @@ dbStr = f.readline().rstrip('\n')
 #instanceid = instfile.readline()
 #instanceid = platform.uname()[1]
 instanceid =  os.getlogin()
-# We take a separate connection in CommonCalls.py file, we don't pass the cursor along
-connection = pymysql.connect(host=hostStr,
-                             user=userStr,
-                             password=passwordStr,
-                             db=dbStr,
-                             charset='utf8mb4',
-                             cursorclass=pymysql.cursors.DictCursor)
+connection = getDbConnection()
 cursor = connection.cursor()
 winuser=os.getlogin()
 dir = "D:\\Users\\" + winuser + "\\learnpython\\TorButton"
@@ -183,7 +186,9 @@ while True:
             cursor.execute(sql)
             connection.commit()
         except Exception as excp:
-            print("db exception inside db exception!")
+            print("db exception inside db exception!attempting new connection")
+            connection=getDbConnection()
+            cursor=connection.cursor()
     finally:
         driver.delete_all_cookies()
         driver.quit()
