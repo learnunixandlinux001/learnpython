@@ -34,7 +34,8 @@ dbStr = f.readline().rstrip('\n')
 # We read it now
 #instfile = open("instance.txt", "r")
 #instanceid = instfile.readline()
-instanceid = platform.uname()[1]
+#instanceid = platform.uname()[1]
+instanceid =  os.getlogin()
 # We take a separate connection in CommonCalls.py file, we don't pass the cursor along
 connection = pymysql.connect(host=hostStr,
                              user=userStr,
@@ -178,8 +179,11 @@ while True:
         sql = "INSERT into `tasks` values('" + loginusername + "','ERROR-" + runMode + "','" + "failed:" + traceback.format_exc().replace(
             "'", '"') + "',now(),'" + instanceid + "')"
         print("Task failed. Updating ERROR record with sql:" + sql)
-        cursor.execute(sql)
-        connection.commit()
+        try:
+            cursor.execute(sql)
+            connection.commit()
+        except Exception as excp:
+            print("db exception inside db exception!")
     finally:
         driver.delete_all_cookies()
         driver.quit()
