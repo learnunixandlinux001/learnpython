@@ -7,6 +7,7 @@ from unidecode import unidecode
 import random
 from time import sleep
 from datetime import datetime
+import os
 from math import floor
 import traceback
 
@@ -44,7 +45,9 @@ passwordStr2 = f2.readline().rstrip('\n')
 dbStr2 = f2.readline().rstrip('\n')
 
 instfile = open("instance.txt","r")
-instanceid = instfile.readline()
+#instanceid = instfile.readline()
+instanceid =  os.getlogin()
+
 
 
 connection = pymysql.connect(host=hostStr2,
