@@ -331,9 +331,15 @@ def login(driver, loginusername, loginpassword):
     sleep(2)
     driver.get('http://www.udemy.com')
     sleep(random.randint(15, 20))
+
     # Click Login button
-    loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
-    driver.execute_script("arguments[0].click();", loginButtonEl)
+    try:
+        loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+        driver.execute_script("arguments[0].click();", loginButtonEl)
+    except NoSuchElementException:
+        loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
+        driver.execute_script("arguments[0].click();", loginNewDesignEL)
+
     sleep(random.randint(10, 15))
     # Fill up username and password and submit
     emailTextBoxEl = driver.find_element_by_xpath("//input[@name='email']")
