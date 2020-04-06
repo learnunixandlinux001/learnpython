@@ -121,9 +121,15 @@ def freshSignUp(driver):
 
         driver.get('http://www.udemy.com')
         sleep(random.randint(10, 15))
+
         # Click Sign up button
-        signUpButtonEl = driver.find_element_by_xpath("//button[@data-purpose='header-signup']")
-        driver.execute_script("arguments[0].click();", signUpButtonEl)
+        try:
+            signUpButtonEl = driver.find_element_by_xpath("//button[@data-purpose='header-signup']")
+            driver.execute_script("arguments[0].click();", signUpButtonEl)
+        except NoSuchElementException:
+            signUpNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"signup-popup")]')
+            driver.execute_script("arguments[0].click();", signUpNewDesignEL)
+
         sleep(random.randint(6, 8))
         # Click email signup button - won't be there sometimes
         try:
