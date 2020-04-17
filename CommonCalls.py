@@ -187,9 +187,15 @@ def freshSignUp(driver):
 def memberBrowseAndEnroll(driver):
     sleep(random.randint(10, 15))
     # After signinup up, search using top search field, select one results, look at one course landing page, come back
-    topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
-    action = ActionChains(driver)
-    action.move_to_element(topSearchFieldEl).click().perform()
+    try:
+        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+        action = ActionChains(driver)
+        action.move_to_element(topSearchFieldEl).click().perform()
+    except NoSuchElementException:
+        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
+        action = ActionChains(driver)
+        action.move_to_element(topSearchFieldEl).click().perform()
+
     sleep(1)
     topSearchFieldEl.send_keys(random.choice(searchKeywords))
     topSearchFieldEl.send_keys(Keys.RETURN)
@@ -232,8 +238,13 @@ def memberBrowseAndEnroll(driver):
 def watchVideo(driver):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
-    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
-    myCoursesTopLinkEl.click()
+
+    try:
+        myCoursesTopLinkEl = driver.find_element_by_xpath('//a[contains(@href,"/home/my-courses")]')
+        myCoursesTopLinkEl.click()
+    except NoSuchElementException:
+        myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
+        myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
     listOfEnrolledCourses = driver.find_elements_by_xpath('//div[contains(@class,"card")]//div[@class="play-button"]')
     numEnrolledCoursesInCurrPage = len(listOfEnrolledCourses)
@@ -284,8 +295,8 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
     except (ElementClickInterceptedException,NoSuchElementException) as e:
         print("Right next button not present on initial video. Maybe its a quiz or coding exercise?OR maybe customer chat iframe is obscuring")
     allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
-    if(len(allProgressCheckBoxes)>51):
-        allProgressCheckBoxes = allProgressCheckBoxes[0,50]
+    if(len(allProgressCheckBoxes)>101):
+        allProgressCheckBoxes = allProgressCheckBoxes[0,100]
 
     for progressCheckBox in allProgressCheckBoxes:
         sleep(random.randint(1, 2))
@@ -340,11 +351,11 @@ def login(driver, loginusername, loginpassword):
 
     # Click Login button
     try:
-        loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
-        driver.execute_script("arguments[0].click();", loginButtonEl)
-    except NoSuchElementException:
         loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
         driver.execute_script("arguments[0].click();", loginNewDesignEL)
+    except NoSuchElementException:
+        loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+        driver.execute_script("arguments[0].click();", loginButtonEl)
 
     sleep(random.randint(10, 15))
     # Fill up username and password and submit
@@ -366,14 +377,22 @@ def login(driver, loginusername, loginpassword):
 def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     driver.get("http://www.udemy.com")
     sleep(random.randint(10, 15))
-    topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
-    action = ActionChains(driver)
-    action.move_to_element(topSearchFieldEl).click().perform()
+
+    try:
+        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+        action = ActionChains(driver)
+        action.move_to_element(topSearchFieldEl).click().perform()
+    except NoSuchElementException:
+        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
+        action = ActionChains(driver)
+        action.move_to_element(topSearchFieldEl).click().perform()
+
     sleep(1)
     topSearchFieldEl.send_keys(random.choice(specificKeywordList))
     topSearchFieldEl.send_keys(Keys.RETURN)
     sleep(random.randint(10, 15))
-    if True:
+    # Some changes to filter widget layout with the new design. Skip exec for now by setting if False below
+    if random.choices([True, False], [0, 100], k=1)[0]:
         filterButtonEl = driver.find_element_by_xpath('//button[contains(@class,"filter")]/span[text()="All Filters"]')
         filterButtonEl.click()
         sleep(random.randint(2, 4))
@@ -468,8 +487,12 @@ def logout(driver):
     driver.get('http://www.udemy.com/user/logout')
     sleep(5)
     # Click Login button. TO make sure browser doesn't remember previous login, we should select 'Login as a different user'
-    loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
-    driver.execute_script("arguments[0].click();", loginButtonEl)
+    try:
+        loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
+        driver.execute_script("arguments[0].click();", loginNewDesignEL)
+    except NoSuchElementException:
+        loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+        driver.execute_script("arguments[0].click();", loginButtonEl)
     sleep(random.randint(10, 15))
     loginAsDifferentUserEl = driver.find_element_by_xpath("//a[@class='cancel-link']")
     driver.execute_script("arguments[0].click();", loginAsDifferentUserEl)
@@ -552,8 +575,14 @@ def rate(driver):
 
 def enlist(driver):
     sleep(random.randint(10, 15))
-    myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
-    myCoursesTopLinkEl.click()
+
+    try:
+        myCoursesTopLinkEl = driver.find_element_by_xpath('//a[contains(@href,"/home/my-courses")]')
+        myCoursesTopLinkEl.click()
+    except NoSuchElementException:
+        myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
+        myCoursesTopLinkEl.click()
+
     sleep(random.randint(10, 15))
     listOfEnrolledCourses = driver.find_elements_by_xpath('//a[contains(@class,"card--learning__details")]')
     numEnrolledCoursesInCurrPage = len(listOfEnrolledCourses)
