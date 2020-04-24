@@ -88,12 +88,16 @@ while True:
     try:
         #launch_tbb_tor_with_stem("D:\\Users\\admin\\Desktop\\Tor Browser")  # I think you can remove this, but maybe some future usages need that
         #driver = TorBrowserDriver("D:\\Users\\admin\\Desktop\\Tor Browser", tor_cfg=cm.USE_STEM)
-        options = webdriver.ChromeOptions()
-        options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        options.add_experimental_option('useAutomationExtension', False)
-        options.add_extension('D:\\Users\\'+winuser+'\\learnpython\\Hacked Onion Browser Button.crx')
-        options.add_argument('no-sandbox')
-        driver = webdriver.Chrome('D:\\Users\\'+winuser+'\\learnpython\\chromedriver.exe',options=options)
+        #options = webdriver.ChromeOptions()
+        #options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        #options.add_experimental_option('useAutomationExtension', False)
+        #options.add_extension('D:\\Users\\'+winuser+'\\learnpython\\Hacked Onion Browser Button.crx')
+        #options.add_argument('no-sandbox')
+        #driver = webdriver.Chrome('D:\\Users\\'+winuser+'\\learnpython\\chromedriver.exe',options=options)
+
+        launch_tbb_tor_with_stem(
+            'D:\\Users\\'+winuser+'\\Desktop\\Tor Browser')  # I think you can remove this, but maybe some future usages need that
+        driver = TorBrowserDriver('D:\\Users\\'+winuser+'\\Desktop\\Tor Browser', tor_cfg=cm.USE_STEM)
 
         print("Created a driver successfully!")
 
