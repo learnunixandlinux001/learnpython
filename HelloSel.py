@@ -48,12 +48,23 @@ instanceid =  os.getlogin()
 connection = getDbConnection()
 cursor = connection.cursor()
 winuser=os.getlogin()
-dir = "D:\\Users\\" + winuser + "\\learnpython\\TorButton"
-cmdline = "run.bat"
-p = Popen("start cmd /K " + cmdline, cwd=dir, shell=True)
+#dir = "D:\\Users\\" + winuser + "\\learnpython\\TorButton"
+#cmdline = "run.bat"
+#p = Popen("start cmd /K " + cmdline, cwd=dir, shell=True)
 
+
+count=0
 # Infinite loop. Keeps going as per ratio of task allocation by RUNMODE given in configs table
 while True:
+    dir = "D:\\Users\\" + winuser + "\\Desktop\\Tor Browser\\Browser"
+    os.system("taskkill /F /IM tor.exe")
+    os.system("taskkill /F /IM firefox.exe")
+
+    if count<2:
+        #os.system('"D:\\Users\\admin08\\Desktop\\Tor Browser\\Browser\\firefox.exe http://facebook.com"')
+        os.system("start firefox --allow-remote http://google.com")
+        count=count+1
+
     # the first search term in the list is special. It will be used to deduce the name of the credentials table for the course
     # for e.g. for the regular expressions course, the search terms are regex, regular expressions, exercises in regex etc.
     # The first term will be picked, which is regex, and it will be postfixed with _creds

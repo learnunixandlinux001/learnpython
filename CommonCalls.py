@@ -121,6 +121,8 @@ def freshSignUp(driver):
 
         driver.get('http://www.udemy.com')
         sleep(random.randint(10, 15))
+        driver.get('http://www.udemy.com')
+        sleep(random.randint(10, 15))
 
         # Click Sign up button
         try:
@@ -347,8 +349,9 @@ def getRatingToBeGiven(driver):
 def login(driver, loginusername, loginpassword):
     sleep(2)
     driver.get('http://www.udemy.com')
+    sleep(random.randint(5, 10))
+    driver.get('http://www.udemy.com')
     sleep(random.randint(15, 20))
-
     # Click Login button
     try:
         loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
