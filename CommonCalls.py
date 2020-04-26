@@ -352,6 +352,14 @@ def login(driver, loginusername, loginpassword):
     sleep(random.randint(5, 10))
     driver.get('http://www.udemy.com')
     sleep(random.randint(15, 20))
+
+    try:
+        cookieOkayButton = driver.find_element_by_xpath('//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
+        driver.execute_script("arguments[0].click();", cookieOkayButton)
+        print("cookie button clicked")
+    except NoSuchElementException:
+        print("No cookie button found")
+
     # Click Login button
     try:
         loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
