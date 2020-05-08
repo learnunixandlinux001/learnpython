@@ -43,6 +43,9 @@ class TorBrowserDriver(FirefoxDriver):
         self.setup_tbb_paths(tbb_path, tbb_fx_binary_path,
                              tbb_profile_path, tor_data_dir)
         self.profile = webdriver.FirefoxProfile(self.tbb_profile_path)
+        self.profile.set_preference("dom.webdriver.enabled", False)
+        self.profile.set_preference('useAutomationExtension', False)
+        self.profile.update_preferences()
         self.install_extensions(extensions)
         self.init_ports(tor_cfg, socks_port, control_port)
         self.init_prefs(pref_dict, default_bridge_type)
