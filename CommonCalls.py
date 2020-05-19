@@ -81,7 +81,7 @@ def getCredsForCurrentStage(runMode):
             sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE'  and `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO') order by RAND() limit 1"
 
         if (runMode == 'SPECIFIC'):
-            sql = "SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='WATCHVIDEO'  and `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='SPECIFIC') and `email` NOT IN (SELECT DISTINCT `email` from `tasks` where stage='ENROLMENT' AND status='success' AND TIMESTAMPDIFF(DAY,completed,now())<1) order by RAND() limit 1"
+            sql = "SELECT distinct `email` FROM `creds` where `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='SPECIFIC') order by RAND() limit 1"
 
         if (runMode == 'RATING'):
             sql = "SELECT distinct `email` FROM `creds` where `email` NOT IN (SELECT distinct `email` FROM `tasks` where `status`='success' and `stage`='BROWSE') order by RAND() limit 1"
