@@ -234,6 +234,11 @@ def memberBrowseAndEnroll(driver):
         sleep(2)
         addToCartEl.click()
         sleep(2)
+        #Some free courses migt have got paid. Need to tag it and clean up our free course data periodically
+        sql = "INSERT into `paidcourses` values('" + result[0]['courseurl'] + "')"
+        cursor.execute(sql)
+        connection.commit()
+
     sleep(random.randint(10, 15))
 
 
@@ -390,13 +395,18 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     sleep(random.randint(10, 15))
 
     try:
-        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+        topSearchFieldEl = driver.find_element_by_xpath('//input[contains(@id,"search-form-autocomplete")]')
         action = ActionChains(driver)
         action.move_to_element(topSearchFieldEl).click().perform()
     except NoSuchElementException:
-        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
-        action = ActionChains(driver)
-        action.move_to_element(topSearchFieldEl).click().perform()
+        try:
+            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
+            action = ActionChains(driver)
+            action.move_to_element(topSearchFieldEl).click().perform()
+        except NoSuchElementException:
+            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+            action = ActionChains(driver)
+            action.move_to_element(topSearchFieldEl).click().perform()
 
     sleep(1)
     topSearchFieldEl.send_keys(random.choice(specificKeywordList))
