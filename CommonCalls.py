@@ -190,13 +190,18 @@ def memberBrowseAndEnroll(driver):
     sleep(random.randint(10, 15))
     # After signinup up, search using top search field, select one results, look at one course landing page, come back
     try:
-        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+        topSearchFieldEl = driver.find_element_by_xpath('//input[contains(@id,"search-form-autocomplete")]')
         action = ActionChains(driver)
         action.move_to_element(topSearchFieldEl).click().perform()
     except NoSuchElementException:
-        topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
-        action = ActionChains(driver)
-        action.move_to_element(topSearchFieldEl).click().perform()
+        try:
+            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
+            action = ActionChains(driver)
+            action.move_to_element(topSearchFieldEl).click().perform()
+        except NoSuchElementException:
+            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+            action = ActionChains(driver)
+            action.move_to_element(topSearchFieldEl).click().perform()
 
     sleep(1)
     topSearchFieldEl.send_keys(random.choice(searchKeywords))
