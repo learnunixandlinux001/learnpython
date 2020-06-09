@@ -160,7 +160,7 @@ def freshSignUp(driver):
         if random.choices([True, False], [85, 15], k=1)[0]:
             driver.execute_script("arguments[0].click();", subscribeEmailsEl)
             sleep(random.randint(2, 5))
-        signUpSubmitButtonEl = driver.find_element_by_xpath('//input[@name="submit"]')
+        signUpSubmitButtonEl = driver.find_element_by_xpath('//input[@type="submit"]')
         signUpSubmitButtonEl.click()
         sleep(random.randint(10, 15))
 
@@ -390,7 +390,7 @@ def login(driver, loginusername, loginpassword):
     sleep(1)
     passwordEl.send_keys(loginpassword)
     sleep(random.randint(2, 5))
-    loginSubmitButtonEl = driver.find_element_by_xpath('//input[@name="submit"]')
+    loginSubmitButtonEl = driver.find_element_by_xpath('//input[@type="submit"]')
     loginSubmitButtonEl.click()
     sleep(random.randint(10, 15))
 
