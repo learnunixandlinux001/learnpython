@@ -227,6 +227,12 @@ def memberBrowseAndEnroll(driver):
     driver.get(editedCourseUrl)
     sleep(5)
     try:
+        cookieOkayButton = driver.find_element_by_xpath('//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
+        driver.execute_script("arguments[0].click();", cookieOkayButton)
+        print("cookie button clicked")
+    except NoSuchElementException:
+        print("No cookie button found")
+    try:
         enrollNowEl = driver.find_element_by_xpath("//button[@data-purpose='buy-this-course-button']")
         # driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
         sleep(2)
@@ -444,6 +450,12 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     #last search term is considered the course url (after adding prefixes and postfixes added of course)
     driver.get("http://www.udemy.com/course/" + specificKeywordList[len(specificKeywordList)-1] + "/learn")
     sleep(3)
+    try:
+        cookieOkayButton = driver.find_element_by_xpath('//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
+        driver.execute_script("arguments[0].click();", cookieOkayButton)
+        print("cookie button clicked")
+    except NoSuchElementException:
+        print("No cookie button found")
     enrollNowEl = driver.find_elements_by_xpath("//button[@data-purpose='buy-this-course-button']")[0]
     sleep(3)
     enrollNowEl.click()
