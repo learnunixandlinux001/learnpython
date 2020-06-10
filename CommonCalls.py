@@ -239,17 +239,19 @@ def memberBrowseAndEnroll(driver):
         enrollNowEl.click()
         sleep(2)
     except NoSuchElementException:
-        addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
-        sleep(2)
-        driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
-        sleep(2)
-        addToCartEl.click()
-        sleep(2)
-        #Some free courses migt have got paid. Need to tag it and clean up our free course data periodically
-        sql = "INSERT into `paidcourses` values('" + result[0]['courseurl'] + "')"
-        cursor.execute(sql)
-        connection.commit()
-
+        try:
+            addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
+            sleep(2)
+            driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
+            sleep(2)
+            addToCartEl.click()
+            sleep(2)
+        except NoSuchElementException:
+            #Some free courses migt have got paid. Need to tag it and clean up our free course data periodically
+            sql = "INSERT into `paidcourses` values('" + result[0]['courseurl'] + "')"
+            cursor.execute(sql)
+            connection.commit()
+            raise NameError("course unavailable")
     sleep(random.randint(10, 15))
 
 
