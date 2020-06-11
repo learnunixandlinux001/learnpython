@@ -231,7 +231,13 @@ def memberBrowseAndEnroll(driver):
         driver.execute_script("arguments[0].click();", cookieOkayButton)
         print("cookie button clicked")
     except NoSuchElementException:
-        print("No cookie button found")
+        try:
+            print("No cookie button found")
+            cookieIconButton = driver.find_element_by_xpath('//symbol[contains(@id,"icon-close")]')
+            driver.execute_script("arguments[0].click();", cookieIconButton)
+            print("cookie icon clicked")
+        except NoSuchElementException:
+            print("no cookie icon found")
     try:
         enrollNowEl = driver.find_element_by_xpath("//button[@data-purpose='buy-this-course-button']")
         # driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
@@ -246,6 +252,9 @@ def memberBrowseAndEnroll(driver):
             sleep(2)
             addToCartEl.click()
             sleep(2)
+            sql = "INSERT into `paidcourses` values('" + result[0]['courseurl'] + "')"
+            cursor.execute(sql)
+            connection.commit()
         except NoSuchElementException:
             #Some free courses migt have got paid. Need to tag it and clean up our free course data periodically
             sql = "INSERT into `paidcourses` values('" + result[0]['courseurl'] + "')"
@@ -376,7 +385,14 @@ def login(driver, loginusername, loginpassword):
         driver.execute_script("arguments[0].click();", cookieOkayButton)
         print("cookie button clicked")
     except NoSuchElementException:
-        print("No cookie button found")
+        try:
+            print("No cookie button found")
+            cookieIconButton = driver.find_element_by_xpath('//symbol[contains(@id,"icon-close")]')
+            driver.execute_script("arguments[0].click();", cookieIconButton)
+            print("cookie icon clicked")
+        except NoSuchElementException:
+            print("no cookie icon found")
+
 
     # Click Login button
     try:
@@ -457,7 +473,13 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
         driver.execute_script("arguments[0].click();", cookieOkayButton)
         print("cookie button clicked")
     except NoSuchElementException:
-        print("No cookie button found")
+        try:
+            print("No cookie button found")
+            cookieIconButton = driver.find_element_by_xpath('//symbol[contains(@id,"icon-close")]')
+            driver.execute_script("arguments[0].click();", cookieIconButton)
+            print("cookie icon clicked")
+        except NoSuchElementException:
+            print("no cookie icon found")
     enrollNowEl = driver.find_elements_by_xpath("//button[@data-purpose='buy-this-course-button']")[0]
     sleep(3)
     enrollNowEl.click()
