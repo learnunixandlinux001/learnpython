@@ -233,7 +233,7 @@ def memberBrowseAndEnroll(driver):
     except NoSuchElementException:
         try:
             print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//symbol[contains(@id,"icon-close")]')
+            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
             driver.execute_script("arguments[0].click();", cookieIconButton)
             print("cookie icon clicked")
         except NoSuchElementException:
@@ -387,7 +387,7 @@ def login(driver, loginusername, loginpassword):
     except NoSuchElementException:
         try:
             print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//symbol[contains(@id,"icon-close")]')
+            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
             driver.execute_script("arguments[0].click();", cookieIconButton)
             print("cookie icon clicked")
         except NoSuchElementException:
@@ -475,7 +475,7 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     except NoSuchElementException:
         try:
             print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//symbol[contains(@id,"icon-close")]')
+            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
             driver.execute_script("arguments[0].click();", cookieIconButton)
             print("cookie icon clicked")
         except NoSuchElementException:
