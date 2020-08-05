@@ -57,7 +57,6 @@ count=0
 # Infinite loop. Keeps going as per ratio of task allocation by RUNMODE given in configs table
 while True:
     dir = "D:\\Users\\" + winuser + "\\Desktop\\Tor Browser\\Browser"
-    print(dir)
     os.system("taskkill /F /IM tor.exe")
     os.system("taskkill /F /IM firefox.exe")
 
