@@ -396,11 +396,15 @@ def login(driver, loginusername, loginpassword):
 
     # Click Login button
     try:
-        loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
-        driver.execute_script("arguments[0].click();", loginNewDesignEL)
+        loginNewestSpanDesignEL = driver.find_element_by_xpath('//span[text()="Log in"]')
+        driver.execute_script("arguments[0].click();", loginNewestSpanDesignEL)
     except NoSuchElementException:
-        loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
-        driver.execute_script("arguments[0].click();", loginButtonEl)
+        try:
+            loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
+            driver.execute_script("arguments[0].click();", loginNewDesignEL)
+        except NoSuchElementException:
+            loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+            driver.execute_script("arguments[0].click();", loginButtonEl)
 
     sleep(random.randint(10, 15))
     # Fill up username and password and submit
@@ -531,9 +535,29 @@ def editRating(driver):
         editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
         driver.execute_script("arguments[0].click();", editRatingSecondButtonEl)
         sleep(2)
+        bookmarksToolTipPopUpEl = driver.find_element_by_xpath('//button[@data-purpose="popover-close"]')
+        driver.execute_script("arguments[0].click();", bookmarksToolTipPopUpEl)
+        sleep(2)
         ratingToBeGiven = getRatingToBeGiven(driver)
         driver.execute_script("arguments[0].click();", ratingToBeGiven)
         sleep(3)
+
+        if random.choices([True, False], [10, 90], k=1)[0]:
+            reviewTextEl = driver.find_element_by_xpath('//textarea[@data-purpose="review-content"]')
+            driver.execute_script("arguments[0].scrollIntoView();", reviewTextEl)
+            driver.execute_script("arguments[0].click();", reviewTextEl)
+            sleep(5)
+            sql = "SELECT `commenttext` FROM reviewcomments order by rand() LIMIT 1"
+            cursor.execute(sql)
+            result = cursor.fetchall()
+            reviewcomment = result[0]['commenttext']
+            print("reviewcomment:"+reviewcomment)
+            reviewTextEl.send_keys(reviewcomment)
+            sleep(1)
+            saveReviewEl = driver.find_element_by_xpath('//button[@data-purpose="save-button"]')
+            driver.execute_script("arguments[0].click();", saveReviewEl)
+            sleep(1)
+
     except NoSuchElementException:
         print("Edit rating button not found")
 
@@ -550,11 +574,15 @@ def logout(driver):
     sleep(5)
     # Click Login button. TO make sure browser doesn't remember previous login, we should select 'Login as a different user'
     try:
-        loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
-        driver.execute_script("arguments[0].click();", loginNewDesignEL)
+        loginNewestSpanDesignEL = driver.find_element_by_xpath('//span[text()="Log in"]')
+        driver.execute_script("arguments[0].click();", loginNewestSpanDesignEL)
     except NoSuchElementException:
-        loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
-        driver.execute_script("arguments[0].click();", loginButtonEl)
+        try:
+            loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
+            driver.execute_script("arguments[0].click();", loginNewDesignEL)
+        except NoSuchElementException:
+            loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+            driver.execute_script("arguments[0].click();", loginButtonEl)
     sleep(random.randint(10, 15))
     loginAsDifferentUserEl = driver.find_element_by_xpath("//a[@class='cancel-link']")
     driver.execute_script("arguments[0].click();", loginAsDifferentUserEl)
