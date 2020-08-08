@@ -542,7 +542,7 @@ def editRating(driver):
         driver.execute_script("arguments[0].click();", ratingToBeGiven)
         sleep(3)
 
-        if random.choices([True, False], [10, 90], k=1)[0]:
+        if random.choices([True, False], [4, 96], k=1)[0]:
             reviewTextEl = driver.find_element_by_xpath('//textarea[@data-purpose="review-content"]')
             driver.execute_script("arguments[0].scrollIntoView();", reviewTextEl)
             driver.execute_script("arguments[0].click();", reviewTextEl)

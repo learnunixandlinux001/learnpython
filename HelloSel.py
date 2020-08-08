@@ -60,7 +60,8 @@ while True:
     os.system("taskkill /F /IM tor.exe")
     os.system("taskkill /F /IM firefox.exe")
 
-    if count<2:
+    #this count used to be 2
+    if count<5000:
         #os.system('"D:\\Users\\admin08\\Desktop\\Tor Browser\\Browser\\firefox.exe http://facebook.com"')
         os.system("start firefox --allow-remote http://google.com")
         count=count+1
