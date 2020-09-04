@@ -125,6 +125,7 @@ def freshSignUp(driver):
         sleep(random.randint(10, 15))
 
         # Click Sign up button
+        handleCookieWindow(driver)
         try:
             signUpButtonEl = driver.find_element_by_xpath("//button[@data-purpose='header-signup']")
             driver.execute_script("arguments[0].click();", signUpButtonEl)
@@ -186,6 +187,27 @@ def freshSignUp(driver):
 
 
 # Browse through and enroll. Free filter disappeared, so might need to pick random free courses from the database of free course urls
+def handleCookieWindow(driver):
+    try:
+        cookieOkayButton = driver.find_element_by_xpath(
+            '//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
+        driver.execute_script("arguments[0].click();", cookieOkayButton)
+        print("cookie button clicked")
+    except NoSuchElementException:
+        try:
+            print("No cookie button found")
+            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
+            driver.execute_script("arguments[0].click();", cookieIconButton)
+            print("cookie icon clicked")
+        except NoSuchElementException:
+            try:
+                cookieIconDiv = driver.find_element_by_xpath('//div[contains(@class,"legal-notice")]')
+                driver.execute_script("arguments[0].click();", cookieIconDiv)
+                print("cookie div clicked")
+            except NoSuchElementException:
+                print("no cookie icon found")
+
+
 def memberBrowseAndEnroll(driver):
     sleep(random.randint(10, 15))
     # After signinup up, search using top search field, select one results, look at one course landing page, come back
@@ -226,18 +248,7 @@ def memberBrowseAndEnroll(driver):
     sleep(2)
     driver.get(editedCourseUrl)
     sleep(5)
-    try:
-        cookieOkayButton = driver.find_element_by_xpath('//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
-        driver.execute_script("arguments[0].click();", cookieOkayButton)
-        print("cookie button clicked")
-    except NoSuchElementException:
-        try:
-            print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
-            driver.execute_script("arguments[0].click();", cookieIconButton)
-            print("cookie icon clicked")
-        except NoSuchElementException:
-            print("no cookie icon found")
+    handleCookieWindow(driver)
     try:
         enrollNowEl = driver.find_element_by_xpath("//button[@data-purpose='buy-this-course-button']")
         # driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
@@ -380,18 +391,7 @@ def login(driver, loginusername, loginpassword):
     driver.get('http://www.udemy.com')
     sleep(random.randint(15, 20))
 
-    try:
-        cookieOkayButton = driver.find_element_by_xpath('//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
-        driver.execute_script("arguments[0].click();", cookieOkayButton)
-        print("cookie button clicked")
-    except NoSuchElementException:
-        try:
-            print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
-            driver.execute_script("arguments[0].click();", cookieIconButton)
-            print("cookie icon clicked")
-        except NoSuchElementException:
-            print("no cookie icon found")
+    handleCookieWindow(driver)
 
 
     # Click Login button
@@ -472,18 +472,7 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     #last search term is considered the course url (after adding prefixes and postfixes added of course)
     driver.get("http://www.udemy.com/course/" + specificKeywordList[len(specificKeywordList)-1] + "/learn")
     sleep(3)
-    try:
-        cookieOkayButton = driver.find_element_by_xpath('//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
-        driver.execute_script("arguments[0].click();", cookieOkayButton)
-        print("cookie button clicked")
-    except NoSuchElementException:
-        try:
-            print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
-            driver.execute_script("arguments[0].click();", cookieIconButton)
-            print("cookie icon clicked")
-        except NoSuchElementException:
-            print("no cookie icon found")
+    handleCookieWindow(driver)
     enrollNowEl = driver.find_elements_by_xpath("//button[@data-purpose='buy-this-course-button']")[0]
     sleep(3)
     enrollNowEl.click()
