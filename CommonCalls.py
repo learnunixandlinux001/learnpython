@@ -190,7 +190,7 @@ def freshSignUp(driver):
 def handleCookieWindow(driver):
     try:
         cookieOkayButton = driver.find_element_by_xpath(
-            '//div[contains(@class,"cookie-message")]/button[contains(@class,"cookie-message")]')
+            '//button[contains(@id,"onetrust-accept-btn-handler")]')
         driver.execute_script("arguments[0].click();", cookieOkayButton)
         print("cookie button clicked")
     except NoSuchElementException:
@@ -503,7 +503,10 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
         sleep(3)
     except NoSuchElementException:
         print("Leave rating button not found. Maybe rating already given? Try editing then")
-        editRatingEl = driver.find_element_by_xpath('//span[contains(text(),"Edit your rating")]')
+        contextButton = driver.find_element_by_xpath('//button[contains(@id,"resource-context-menu-trigger")]')
+        driver.execute_script("arguments[0].click();", contextButton)
+        sleep(2)
+        editRatingEl = driver.find_element_by_xpath('//div[contains(text(),"Edit your rating")]')
         driver.execute_script("arguments[0].click();", editRatingEl)
         sleep(2)
         editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
@@ -518,15 +521,21 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
 #
 def editRating(driver):
     try:
-        editRatingEl = driver.find_element_by_xpath('//span[contains(text(),"Edit your rating")]')
+        contextButton = driver.find_element_by_xpath('//button[contains(@id,"resource-context-menu-trigger")]')
+        driver.execute_script("arguments[0].click();", contextButton)
+        sleep(2)
+        editRatingEl = driver.find_element_by_xpath('//div[contains(text(),"Edit your rating")]')
         driver.execute_script("arguments[0].click();", editRatingEl)
         sleep(2)
         editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
         driver.execute_script("arguments[0].click();", editRatingSecondButtonEl)
         sleep(2)
-        bookmarksToolTipPopUpEl = driver.find_element_by_xpath('//button[@data-purpose="popover-close"]')
-        driver.execute_script("arguments[0].click();", bookmarksToolTipPopUpEl)
-        sleep(2)
+        try:
+            bookmarksToolTipPopUpEl = driver.find_element_by_xpath('//button[@data-purpose="popover-close"]')
+            driver.execute_script("arguments[0].click();", bookmarksToolTipPopUpEl)
+            sleep(2)
+        except NoSuchElementException:
+            print("popover not found in edit rating dialog box")
         ratingToBeGiven = getRatingToBeGiven(driver)
         driver.execute_script("arguments[0].click();", ratingToBeGiven)
         sleep(3)
