@@ -281,9 +281,16 @@ def watchVideo(driver):
 
     try:
         myCoursesTopLinkEl = driver.find_element_by_xpath('//a[contains(@href,"/home/my-courses")]')
+        print("Going to click mycourses link")
         myCoursesTopLinkEl.click()
+        print("After first click")
+        #sometimes clicking simply opens up menu, so lets click again
+        myCoursesTopLinkEl.click()
+        print("After second click")
+
     except NoSuchElementException:
         myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
+        print("Going to click mylearning link")
         myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
     listOfEnrolledCourses = driver.find_elements_by_xpath('//div[contains(@class,"card")]//div[@class="play-button"]')
@@ -666,7 +673,12 @@ def enlist(driver):
 
     try:
         myCoursesTopLinkEl = driver.find_element_by_xpath('//a[contains(@href,"/home/my-courses")]')
+        print("Going to click mycourses link")
         myCoursesTopLinkEl.click()
+        print("After first click")
+        # sometimes clicking simply opens up menu, so lets click again
+        myCoursesTopLinkEl.click()
+        print("After second click")
     except NoSuchElementException:
         myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
         myCoursesTopLinkEl.click()
