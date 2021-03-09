@@ -504,7 +504,7 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
         leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
         driver.execute_script("arguments[0].click();", leaveRatingEl)
         sleep(2)
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
+        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
         sleep(2)
         driver.execute_script("arguments[0].click();", fourEl)
         sleep(3)
