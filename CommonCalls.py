@@ -510,7 +510,7 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
         sleep(3)
     except NoSuchElementException:
         print("Leave rating button not found. Maybe rating already given? Try editing then")
-        contextButton = driver.find_element_by_xpath('//button[contains(@id,"resource-context-menu-trigger")]')
+        contextButton = driver.find_element_by_xpath('//button[contains(@id,"dropdown-trigger")]')
         driver.execute_script("arguments[0].click();", contextButton)
         sleep(2)
         editRatingEl = driver.find_element_by_xpath('//div[contains(text(),"Edit your rating")]')
@@ -528,7 +528,7 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
 #
 def editRating(driver):
     try:
-        contextButton = driver.find_element_by_xpath('//button[contains(@id,"resource-context-menu-trigger")]')
+        contextButton = driver.find_element_by_xpath('//button[contains(@id,"dropdown-trigger")]')
         driver.execute_script("arguments[0].click();", contextButton)
         sleep(2)
         editRatingEl = driver.find_element_by_xpath('//div[contains(text(),"Edit your rating")]')
