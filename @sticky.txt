@@ -1,0 +1,20 @@
+Downloaded latest Onion Browser Button plugin from chrome.
+If developer mode is on in Chrome, you can download crx (Use a crx plugin downloader, plenty of such Chrome extension available)
+Once you download crx, extract it into a folder: 'Onion Browser Button'  (crx is basically a zip file)
+Inside this folder code, in the file config.js in lib folder, look for app.storage.read("state") and make it ON (This is to turn ON plugin automatically when Chrome starts).
+Do a pip3 install for the python library 'Undetected Chrome Driver'. Github page for project is https://github.com/ultrafunkamsterdam/undetected-chromedriver
+>pip install undetected-chromedriver
+This special chromedriver will help Chrome escape the Cloudfare filtering.
+In your python code, this is the snippet to use:
+        chrome_options = uc.ChromeOptions()
+        chrome_options.add_argument('--load-extension=D:\\Onion-Browser-Button') //This folder is where you hacked the config.js file and made it 'ON' instead of 'OFF'
+        driver = uc.Chrome(options=chrome_options)
+Note that in the code you execute only one round , instead of infinite loop. So after one task, program exits.
+So now, you have to call this program in a loop using a .bat file. Check out the file infinite.bat which Sujith made, available on github learnpython.
+
+Note: It stills showing 'Are you Human?' page while browsing thru Udemy. Need to figure out a way to send following options. Is the 'Undetected chromedriver' sending it by default?
+Our old program was using conventional Chrome driver, and so we were able to send following options.
+THe undetected-chromedriver is throwing an error when we give these options. Need to retry.
+ #options.add_experimental_option("excludeSwitches", ["enable-automation"])
+ #options.add_experimental_option('useAutomationExtension', False)
+ #options.add_argument('no-sandbox')
