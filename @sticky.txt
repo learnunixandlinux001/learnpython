@@ -10,7 +10,7 @@ In your python code, this is the snippet to use:
         chrome_options.add_argument('--load-extension=D:\\Onion-Browser-Button') //This folder is where you hacked the config.js file and made it 'ON' instead of 'OFF'
         driver = uc.Chrome(options=chrome_options)
 Note that in the code you execute only one round , instead of infinite loop. So after one task, program exits.
-So now, you have to call this program in a loop using a .bat file. Check out the file infinite.bat which Sujith made, available on github learnpython.
+So now, you have to call this program in a loop using a .bat file. Check out the file infinite.bat which Sujith made, available on github learnpython.New python file is sample.py
 
 Note: It stills showing 'Are you Human?' page while browsing thru Udemy. Need to figure out a way to send following options. Is the 'Undetected chromedriver' sending it by default?
 Our old program was using conventional Chrome driver, and so we were able to send following options.
