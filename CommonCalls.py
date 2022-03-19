@@ -635,7 +635,7 @@ def rate(driver):
         print("Upgrade done, going to update rating table with:" + sql)
         cursor.execute(sql)
         connection.commit()
-        logout(driver)
+        #logout(driver)
 
     #Second phase. Lets leave a 4 star rating by picking a user who has still not rated, if mode is UPGRADESONLY, skip this.
     #Max 3 reviews at a time , waiting to get upgraded. We don't want to exhaust our number of unrated bots.
