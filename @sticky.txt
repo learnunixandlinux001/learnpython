@@ -1,16 +1,19 @@
-Downloaded latest Onion Browser Button plugin from chrome.
-If developer mode is on in Chrome, you can download crx (Use a crx plugin downloader, plenty of such Chrome extension available)
-Once you download crx, extract it into a folder: 'Onion Browser Button'  (crx is basically a zip file)
-Inside this folder code, in the file config.js in lib folder, look for app.storage.read("state") and make it ON (This is to turn ON plugin automatically when Chrome starts).
-Do a pip3 install for the python library 'Undetected Chrome Driver'. Github page for project is https://github.com/ultrafunkamsterdam/undetected-chromedriver
+1. Downloaded latest Onion Browser Button plugin from chrome.
+2. If developer mode is on in Chrome, you can download crx (Use a crx plugin downloader, plenty of such Chrome extension available)
+3. Once you download crx, extract it into a folder: 'Onion Browser Button'  (crx is basically a zip file)
+4. Inside this folder code, in the file config.js in lib folder, look for app.storage.read("state") and make it ON (This is to turn ON plugin automatically when Chrome starts).
+5. Do a pip3 install for the python library 'Undetected Chrome Driver'. Github page for project is https://github.com/ultrafunkamsterdam/undetected-chromedriver
 >pip install undetected-chromedriver
 This special chromedriver will help Chrome escape the Cloudfare filtering.
-In your python code, this is the snippet to use:
+6. In your python code, this is the snippet to use:
         chrome_options = uc.ChromeOptions()
         chrome_options.add_argument('--load-extension=D:\\Onion-Browser-Button') //This folder is where you hacked the config.js file and made it 'ON' instead of 'OFF'
         driver = uc.Chrome(options=chrome_options)
-Note that in the code you execute only one round , instead of infinite loop. So after one task, program exits.
+7. Note that in the code you execute only one round , instead of infinite loop. So after one task, program exits.
 So now, you have to call this program in a loop using a .bat file. Check out the file infinite.bat which Sujith made, available on github learnpython.New python file is sample.py
+8. Note that for Onion Browser Button plugin to work, we should also start a standalone TOR process in the background. The code is in the 'standalone-tor-server' folder. Just open a CMD in windows and run the 'run.bat' from inside this folder and choose option 1 - 'Start TOR connection' and leave it running. Only after this, start your program.
+
+Note: Sometimes the TOR network is slow and program will have too many failures.
 
 Note: It stills showing 'Are you Human?' page while browsing thru Udemy. Need to figure out a way to send following options. Is the 'Undetected chromedriver' sending it by default?
 Our old program was using conventional Chrome driver, and so we were able to send following options.
