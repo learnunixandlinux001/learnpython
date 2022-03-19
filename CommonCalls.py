@@ -121,8 +121,6 @@ def freshSignUp(driver):
 
         driver.get('http://www.udemy.com')
         sleep(random.randint(10, 15))
-        driver.get('http://www.udemy.com')
-        sleep(random.randint(10, 15))
 
         # Click Sign up button
         handleCookieWindow(driver)
@@ -393,8 +391,6 @@ def getRatingToBeGiven(driver):
 
 def login(driver, loginusername, loginpassword):
     sleep(2)
-    driver.get('http://www.udemy.com')
-    sleep(random.randint(5, 10))
     driver.get('http://www.udemy.com')
     sleep(random.randint(15, 20))
 
