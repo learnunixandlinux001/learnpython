@@ -21,3 +21,5 @@ THe undetected-chromedriver is throwing an error when we give these options. Nee
  #options.add_experimental_option("excludeSwitches", ["enable-automation"])
  #options.add_experimental_option('useAutomationExtension', False)
  #options.add_argument('no-sandbox')
+
+Note: If cloudfare detection is a problem, try installing latest of 'Undetected Chrome Driver' using pip3. The project is active and they might have figured out some fixes.

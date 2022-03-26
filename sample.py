@@ -33,6 +33,7 @@ if __name__ == '__main__':
     try:
         chrome_options = uc.ChromeOptions()
         chrome_options.add_argument('--load-extension=D:\\Onion-Browser-Button')
+        
         driver = uc.Chrome(options=chrome_options)
 
         instanceid = os.getlogin()
@@ -139,8 +140,10 @@ if __name__ == '__main__':
             driver.quit()
 
     except RuntimeError as e:
+        connection.close()
         print('runtime error')
         print(e)
         driver.delete_all_cookies()
         driver.quit()
+    connection.close()
 
