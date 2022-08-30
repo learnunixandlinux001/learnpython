@@ -125,41 +125,41 @@ def freshSignUp(driver):
         # Click Sign up button
         handleCookieWindow(driver)
         try:
-            signUpButtonEl = driver.find_element_by_xpath("//button[@data-purpose='header-signup']")
+            signUpButtonEl = driver.find_element('xpath',"//button[@data-purpose='header-signup']")
             driver.execute_script("arguments[0].click();", signUpButtonEl)
         except NoSuchElementException:
-            signUpNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"signup-popup")]')
+            signUpNewDesignEL = driver.find_element('xpath','//a[contains(@href,"signup-popup")]')
             driver.execute_script("arguments[0].click();", signUpNewDesignEL)
 
         sleep(random.randint(6, 8))
         # Click email signup button - won't be there sometimes
         try:
-            emailSignUpButtonEl = driver.find_element_by_xpath("//a[@data-purpose='email-signup-link']")
+            emailSignUpButtonEl = driver.find_element('xpath',"//a[@data-purpose='email-signup-link']")
             driver.execute_script("arguments[0].click();", emailSignUpButtonEl)
             sleep(random.randint(3, 5))
         except NoSuchElementException:
             print("email signup button not there, so skipping")
         #Fill up fields and submit
-        fullNameTextBoxEl = driver.find_element_by_xpath("//input[@name='fullname']")
+        fullNameTextBoxEl = driver.find_element('xpath',"//input[@name='fullname']")
         fullNameTextBoxEl.click()
         sleep(1)
         fullNameTextBoxEl.send_keys(combinedName)
         sleep(random.randint(2, 5))
-        emailTextBoxEl = driver.find_element_by_xpath("//input[@name='email']")
+        emailTextBoxEl = driver.find_element('xpath',"//input[@name='email']")
         emailTextBoxEl.click()
         sleep(1)
         emailTextBoxEl.send_keys(completeEmailId)
         sleep(random.randint(2, 5))
-        passwordEl = driver.find_element_by_xpath("//input[@name='password']")
+        passwordEl = driver.find_element('xpath',"//input[@name='password']")
         passwordEl.click()
         sleep(1)
         passwordEl.send_keys(password)
         sleep(random.randint(2, 5))
-        subscribeEmailsEl = driver.find_element_by_xpath("//input[@data-purpose='subscribe-to-emails']")
+        subscribeEmailsEl = driver.find_element('xpath',"//input[@data-purpose='subscribe-to-emails']")
         if random.choices([True, False], [85, 15], k=1)[0]:
             driver.execute_script("arguments[0].click();", subscribeEmailsEl)
             sleep(random.randint(2, 5))
-        signUpSubmitButtonEl = driver.find_element_by_xpath('//input[@type="submit"]')
+        signUpSubmitButtonEl = driver.find_element('xpath','//input[@type="submit"]')
         signUpSubmitButtonEl.click()
         sleep(random.randint(10, 15))
 
@@ -187,19 +187,19 @@ def freshSignUp(driver):
 # Browse through and enroll. Free filter disappeared, so might need to pick random free courses from the database of free course urls
 def handleCookieWindow(driver):
     try:
-        cookieOkayButton = driver.find_element_by_xpath(
+        cookieOkayButton = driver.find_element('xpath',
             '//button[contains(@id,"onetrust-accept-btn-handler")]')
         driver.execute_script("arguments[0].click();", cookieOkayButton)
         print("cookie button clicked")
     except NoSuchElementException:
         try:
             print("No cookie button found")
-            cookieIconButton = driver.find_element_by_xpath('//button[contains(@class,"legal-notice")]')
+            cookieIconButton = driver.find_element('xpath','//button[contains(@class,"legal-notice")]')
             driver.execute_script("arguments[0].click();", cookieIconButton)
             print("cookie icon clicked")
         except NoSuchElementException:
             try:
-                cookieIconDiv = driver.find_element_by_xpath('//div[contains(@class,"legal-notice")]')
+                cookieIconDiv = driver.find_element('xpath','//div[contains(@class,"legal-notice")]')
                 driver.execute_script("arguments[0].click();", cookieIconDiv)
                 print("cookie div clicked")
             except NoSuchElementException:
@@ -210,16 +210,16 @@ def memberBrowseAndEnroll(driver):
     sleep(random.randint(10, 15))
     # After signinup up, search using top search field, select one results, look at one course landing page, come back
     try:
-        topSearchFieldEl = driver.find_element_by_xpath('//input[contains(@id,"search-form-autocomplete")]')
+        topSearchFieldEl = driver.find_element('xpath','//input[contains(@id,"search-form-autocomplete")]')
         action = ActionChains(driver)
         action.move_to_element(topSearchFieldEl).click().perform()
     except NoSuchElementException:
         try:
-            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
+            topSearchFieldEl = driver.find_element('xpath',"//input[@id='header-search-field']")
             action = ActionChains(driver)
             action.move_to_element(topSearchFieldEl).click().perform()
         except NoSuchElementException:
-            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+            topSearchFieldEl = driver.find_element('xpath',"//input[@id='header-desktop-search-bar']")
             action = ActionChains(driver)
             action.move_to_element(topSearchFieldEl).click().perform()
 
@@ -229,7 +229,7 @@ def memberBrowseAndEnroll(driver):
     sleep(random.randint(10, 15))
     if random.choice([True, False]):
         try:
-            nextPage = driver.find_element_by_xpath('//ul[contains(@class,"pagination")]/li/a[contains(text(),2)]')
+            nextPage = driver.find_element('xpath','//ul[contains(@class,"pagination")]/li/a[contains(text(),2)]')
             driver.execute_script("arguments[0].scrollIntoView();", nextPage)
             sleep(2)
             nextPage.click()
@@ -248,14 +248,14 @@ def memberBrowseAndEnroll(driver):
     sleep(5)
     handleCookieWindow(driver)
     try:
-        enrollNowEl = driver.find_element_by_xpath("//button[@data-purpose='buy-this-course-button']")
+        enrollNowEl = driver.find_element('xpath',"//button[@data-purpose='buy-this-course-button']")
         # driver.execute_script("arguments[0].scrollIntoView();", enrollNowEl)
         sleep(2)
         enrollNowEl.click()
         sleep(2)
     except NoSuchElementException:
         try:
-            addToCartEl = driver.find_element_by_xpath("//button[contains(@class,'add-to-cart')]")
+            addToCartEl = driver.find_element('xpath',"//button[contains(@class,'add-to-cart')]")
             sleep(2)
             driver.execute_script("arguments[0].scrollIntoView();", addToCartEl)
             sleep(2)
@@ -278,7 +278,7 @@ def watchVideo(driver):
     sleep(random.randint(10, 15))
 
     try:
-        myCoursesTopLinkEl = driver.find_element_by_xpath('//a[contains(@href,"/home/my-courses")]')
+        myCoursesTopLinkEl = driver.find_element('xpath','//a[contains(@href,"/home/my-courses")]')
         print("Going to click mycourses link")
         myCoursesTopLinkEl.click()
         print("After first click")
@@ -287,11 +287,11 @@ def watchVideo(driver):
         print("After second click")
 
     except NoSuchElementException:
-        myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
+        myCoursesTopLinkEl = driver.find_element('xpath',"//a[@id='header.my-learning']")
         print("Going to click mylearning link")
         myCoursesTopLinkEl.click()
     sleep(random.randint(10, 15))
-    listOfEnrolledCourses = driver.find_elements_by_xpath('//div[contains(@class,"card")]//div[@class="play-button"]')
+    listOfEnrolledCourses = driver.find_element('xpath','//div[contains(@class,"card")]//div[@class="play-button"]')
     numEnrolledCoursesInCurrPage = len(listOfEnrolledCourses)
     interestedEnrolledCourse = listOfEnrolledCourses[random.randint(0, numEnrolledCoursesInCurrPage - 1)]
     humanWatch(driver, interestedEnrolledCourse, '')
@@ -305,7 +305,7 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
     else:
         driver.execute_script("arguments[0].scrollIntoView();", interestedEnrolledCourse)
         try:
-            dismissPopupEl = driver.find_element_by_xpath('//small[contains(@ng-click,"dismiss")]')
+            dismissPopupEl = driver.find_element('xpath','//small[contains(@ng-click,"dismiss")]')
             dismissPopupEl.click()
             sleep(1)
         except NoSuchElementException:
@@ -315,18 +315,18 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
         driver.execute_script("arguments[0].click();", interestedEnrolledCourse)
     sleep(random.randint(10, 15))
     try:
-        modalPopupEl = driver.find_element_by_xpath('//div[contains(@class,"modal")]//button[@class="close"]')
+        modalPopupEl = driver.find_element('xpath','//div[contains(@class,"modal")]//button[@class="close"]')
         modalPopupEl.click()
         sleep(1)
     except NoSuchElementException:
         print("No modal window in course play page")
     try:
-        initialPlayButton = driver.find_element_by_xpath('//div[contains(@data-purpose,"play-button")]')
+        initialPlayButton = driver.find_element('xpath','//button[contains(@data-purpose,"video-play-button-initial")]')
         initialPlayButton.click()
     except NoSuchElementException:
         print("Play button not there on play page")
-    listOfSectionExpanders = driver.find_elements_by_xpath(
-        '//div[contains(@class,"section-heading")]//span[contains(@class,"angle-down")]')
+    listOfSectionExpanders = driver.find_elements('xpath',
+        '//div[contains(@class,"section-heading")]//span[contains(@class,"accordion-panel-title")]')
     for sectionExpander in listOfSectionExpanders:
         driver.execute_script("arguments[0].scrollIntoView();", sectionExpander)
         sleep(1)
@@ -335,11 +335,11 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
         except ElementClickInterceptedException:
             print("Unable to expand section. something blocking the UI. Maybe customer care chat?")
     try:
-        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
+        nextVideoRightAngler = driver.find_element('xpath','//div[contains(@data-purpose,"go-to-next")]')
         nextVideoRightAngler.click()
     except (ElementClickInterceptedException,NoSuchElementException) as e:
         print("Right next button not present on initial video. Maybe its a quiz or coding exercise?OR maybe customer chat iframe is obscuring")
-    allProgressCheckBoxes = driver.find_elements_by_xpath('//input[@data-purpose="progress-toggle-button"]')
+    allProgressCheckBoxes = driver.find_elements('xpath','//input[@data-purpose="progress-toggle-button"]')
     if(len(allProgressCheckBoxes)>101):
         allProgressCheckBoxes = allProgressCheckBoxes[0,100]
 
@@ -348,14 +348,14 @@ def humanWatch(driver, interestedEnrolledCourse, courseurl):
         if random.choices([True, False], [80, 20], k=1)[0]:
             driver.execute_script("arguments[0].click();", progressCheckBox)
     try:
-        nextVideoRightAngler = driver.find_element_by_xpath('//span[contains(@class,"angle-right")]')
+        nextVideoRightAngler = driver.find_element('xpath','//div[contains(@data-purpose,"go-to-next")]')
         nextVideoRightAngler.click()
     except (ElementClickInterceptedException, NoSuchElementException) as e:
         print("Right next button not present on initial video. Maybe its a quiz or coding exercise?OR maybe customer chat iframe is obscuring")
 
 def firstTimeRate(driver):
     try:
-        leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
+        leaveRatingEl = driver.find_element('xpath','//div[contains(@class,"leave-rating")]')
         driver.execute_script("arguments[0].click();", leaveRatingEl)
         sleep(2)
         ratingToBeGiven = getRatingToBeGiven(driver)
@@ -367,13 +367,13 @@ def firstTimeRate(driver):
 
 
 def getRatingToBeGiven(driver):
-    twoEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2-label")]')
-    twoandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-2.5-label")]')
-    threeEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3-label")]')
-    threeandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-3.5-label")]')
-    fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
-    fourandhalfEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4.5-label")]')
-    fiveEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-5-label")]')
+    twoEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-2-label")]')
+    twoandhalfEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-2.5-label")]')
+    threeEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-3-label")]')
+    threeandhalfEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-3.5-label")]')
+    fourEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-4-label")]')
+    fourandhalfEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-4.5-label")]')
+    fiveEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-5-label")]')
 
     allRatingsList = [twoEl, twoandhalfEl, threeEl, threeandhalfEl, fourEl, fourandhalfEl, fiveEl]
 
@@ -399,30 +399,38 @@ def login(driver, loginusername, loginpassword):
 
     # Click Login button
     try:
-        loginNewestSpanDesignEL = driver.find_element_by_xpath('//span[text()="Log in"]')
+        loginNewestSpanDesignEL = driver.find_element('xpath','//span[text()="Log in"]')
         driver.execute_script("arguments[0].click();", loginNewestSpanDesignEL)
     except NoSuchElementException:
         try:
-            loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
+            loginNewDesignEL = driver.find_element('xpath','//a[contains(@href,"login-popup")]')
             driver.execute_script("arguments[0].click();", loginNewDesignEL)
         except NoSuchElementException:
-            loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+            loginButtonEl = driver.find_element('xpath',"//button[text()='Log In']")
             driver.execute_script("arguments[0].click();", loginButtonEl)
 
-    sleep(random.randint(10, 15))
+    sleep(random.randint(1, 5))
+
+
+    sleep(1000)#TODO REMOVE
+
+
     # Fill up username and password and submit
-    emailTextBoxEl = driver.find_element_by_xpath("//input[@name='email']")
+    emailTextBoxEl = driver.find_element('xpath',"//input[@name='email']")
     emailTextBoxEl.click()
     sleep(1)
     emailTextBoxEl.send_keys(loginusername)
     sleep(random.randint(2, 5))
-    passwordEl = driver.find_element_by_xpath("//input[@name='password']")
+    passwordEl = driver.find_element('xpath',"//input[@name='password']")
     passwordEl.click()
     sleep(1)
     passwordEl.send_keys(loginpassword)
     sleep(random.randint(2, 5))
-    loginSubmitButtonEl = driver.find_element_by_xpath('//input[@type="submit"]')
+    loginSubmitButtonEl = driver.find_element('xpath','//input[@type="submit"]')
     loginSubmitButtonEl.click()
+
+    sleep(1000)#TODO REMOVE
+
     sleep(random.randint(10, 15))
 
 
@@ -431,16 +439,16 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     sleep(random.randint(10, 15))
 
     try:
-        topSearchFieldEl = driver.find_element_by_xpath('//input[contains(@id,"search-form-autocomplete")]')
+        topSearchFieldEl = driver.find_element('xpath','//input[contains(@id,"search-form-autocomplete")]')
         action = ActionChains(driver)
         action.move_to_element(topSearchFieldEl).click().perform()
     except NoSuchElementException:
         try:
-            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-search-field']")
+            topSearchFieldEl = driver.find_element('xpath',"//input[@id='header-search-field']")
             action = ActionChains(driver)
             action.move_to_element(topSearchFieldEl).click().perform()
         except NoSuchElementException:
-            topSearchFieldEl = driver.find_element_by_xpath("//input[@id='header-desktop-search-bar']")
+            topSearchFieldEl = driver.find_element('xpath',"//input[@id='header-desktop-search-bar']")
             action = ActionChains(driver)
             action.move_to_element(topSearchFieldEl).click().perform()
 
@@ -450,20 +458,20 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     sleep(random.randint(10, 15))
     # Some changes to filter widget layout with the new design. Skip exec for now by setting if False below
     if random.choices([True, False], [0, 100], k=1)[0]:
-        filterButtonEl = driver.find_element_by_xpath('//button[contains(@class,"filter")]/span[text()="All Filters"]')
+        filterButtonEl = driver.find_element('xpath','//button[contains(@class,"filter")]/span[text()="All Filters"]')
         filterButtonEl.click()
         sleep(random.randint(2, 4))
-        englishFilterEl = driver.find_element_by_xpath(
+        englishFilterEl = driver.find_element('xpath',
             '//span[contains(@class,"toggle-control")]//span[text()="English"]')
         sleep(random.randint(2, 4))
         driver.execute_script("arguments[0].scrollIntoView();", englishFilterEl)
         driver.execute_script("arguments[0].click();", englishFilterEl)
         try:
-            freeFilterEl = driver.find_element_by_xpath('//span[contains(@class,"toggle-control")]//span[text()="Free"]')
+            freeFilterEl = driver.find_element('xpath','//span[contains(@class,"toggle-control")]//span[text()="Free"]')
             driver.execute_script("arguments[0].scrollIntoView();", freeFilterEl)
             driver.execute_script("arguments[0].click();", freeFilterEl)
             sleep(random.randint(2, 4))
-            applyButtonEl = driver.find_element_by_xpath('//button[text()="Apply"]')
+            applyButtonEl = driver.find_element('xpath','//button[text()="Apply"]')
             driver.execute_script("arguments[0].scrollIntoView();", applyButtonEl)
             applyButtonEl.click()
         except NoSuchElementException:
@@ -476,7 +484,7 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
     driver.get("http://www.udemy.com/course/" + specificKeywordList[len(specificKeywordList)-1] + "/learn")
     sleep(3)
     handleCookieWindow(driver)
-    enrollNowEl = driver.find_elements_by_xpath("//button[@data-purpose='buy-this-course-button']")[0]
+    enrollNowEl = driver.find_element('xpath',"//button[@data-purpose='buy-this-course-button']")[0]
     sleep(3)
     enrollNowEl.click()
     sleep(random.randint(10, 15))
@@ -497,25 +505,25 @@ def specificEnroll(driver, specificKeywordList, loginusername, loginpassword):
 def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
     humanWatch(driver,'',courseurl)
     try:
-        leaveRatingEl = driver.find_element_by_xpath('//div[contains(@class,"leave-rating")]')
+        leaveRatingEl = driver.find_element('xpath','//div[contains(@class,"leave-rating")]')
         driver.execute_script("arguments[0].click();", leaveRatingEl)
         sleep(2)
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
+        fourEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-4-label")]')
         sleep(2)
         driver.execute_script("arguments[0].click();", fourEl)
         sleep(3)
     except NoSuchElementException:
         print("Leave rating button not found. Maybe rating already given? Try editing then")
-        contextButton = driver.find_element_by_xpath('//button[contains(@id,"dropdown-trigger")]')
+        contextButton = driver.find_element('xpath','//button[contains(@id,"dropdown-trigger")]')
         driver.execute_script("arguments[0].click();", contextButton)
         sleep(2)
-        editRatingEl = driver.find_element_by_xpath('//div[contains(text(),"Edit your rating")]')
+        editRatingEl = driver.find_element('xpath','//div[contains(text(),"Edit your rating")]')
         driver.execute_script("arguments[0].click();", editRatingEl)
         sleep(2)
-        editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
+        editRatingSecondButtonEl = driver.find_element('xpath','//button[@data-purpose="edit-button"]')
         driver.execute_script("arguments[0].click();", editRatingSecondButtonEl)
         sleep(2)
-        fourEl = driver.find_element_by_xpath('//label[contains(@data-purpose,"review-star-input-4-label")]')
+        fourEl = driver.find_element('xpath','//label[contains(@data-purpose,"review-star-input-4-label")]')
         driver.execute_script("arguments[0].click();", fourEl)
         sleep(3)
 
@@ -524,17 +532,17 @@ def watchSpecificVideoAndLeave4StarRating(driver, selectedCourseKey, courseurl):
 #
 def editRating(driver):
     try:
-        contextButton = driver.find_element_by_xpath('//button[contains(@id,"dropdown-trigger")]')
+        contextButton = driver.find_element('xpath','//button[contains(@id,"dropdown-trigger")]')
         driver.execute_script("arguments[0].click();", contextButton)
         sleep(2)
-        editRatingEl = driver.find_element_by_xpath('//div[contains(text(),"Edit your rating")]')
+        editRatingEl = driver.find_element('xpath','//div[contains(text(),"Edit your rating")]')
         driver.execute_script("arguments[0].click();", editRatingEl)
         sleep(2)
-        editRatingSecondButtonEl = driver.find_element_by_xpath('//button[@data-purpose="edit-button"]')
+        editRatingSecondButtonEl = driver.find_element('xpath','//button[@data-purpose="edit-button"]')
         driver.execute_script("arguments[0].click();", editRatingSecondButtonEl)
         sleep(2)
         try:
-            bookmarksToolTipPopUpEl = driver.find_element_by_xpath('//button[@data-purpose="popover-close"]')
+            bookmarksToolTipPopUpEl = driver.find_element('xpath','//button[@data-purpose="popover-close"]')
             driver.execute_script("arguments[0].click();", bookmarksToolTipPopUpEl)
             sleep(2)
         except NoSuchElementException:
@@ -544,7 +552,7 @@ def editRating(driver):
         sleep(3)
 
         if random.choices([True, False], [2, 98], k=1)[0]:
-            reviewTextEl = driver.find_element_by_xpath('//textarea[@data-purpose="review-content"]')
+            reviewTextEl = driver.find_element('xpath','//textarea[@data-purpose="review-content"]')
             driver.execute_script("arguments[0].scrollIntoView();", reviewTextEl)
             driver.execute_script("arguments[0].click();", reviewTextEl)
             sleep(5)
@@ -555,7 +563,7 @@ def editRating(driver):
             print("reviewcomment:"+reviewcomment)
             reviewTextEl.send_keys(reviewcomment)
             sleep(1)
-            saveReviewEl = driver.find_element_by_xpath('//button[@data-purpose="save-button"]')
+            saveReviewEl = driver.find_element('xpath','//button[@data-purpose="save-button"]')
             driver.execute_script("arguments[0].click();", saveReviewEl)
             sleep(1)
 
@@ -575,17 +583,17 @@ def logout(driver):
     sleep(5)
     # Click Login button. TO make sure browser doesn't remember previous login, we should select 'Login as a different user'
     try:
-        loginNewestSpanDesignEL = driver.find_element_by_xpath('//span[text()="Log in"]')
+        loginNewestSpanDesignEL = driver.find_element('xpath','//span[text()="Log in"]')
         driver.execute_script("arguments[0].click();", loginNewestSpanDesignEL)
     except NoSuchElementException:
         try:
-            loginNewDesignEL = driver.find_element_by_xpath('//a[contains(@href,"login-popup")]')
+            loginNewDesignEL = driver.find_element('xpath','//a[contains(@href,"login-popup")]')
             driver.execute_script("arguments[0].click();", loginNewDesignEL)
         except NoSuchElementException:
-            loginButtonEl = driver.find_element_by_xpath("//button[text()='Log In']")
+            loginButtonEl = driver.find_element('xpath',"//button[text()='Log In']")
             driver.execute_script("arguments[0].click();", loginButtonEl)
     sleep(random.randint(10, 15))
-    loginAsDifferentUserEl = driver.find_element_by_xpath("//a[@class='cancel-link']")
+    loginAsDifferentUserEl = driver.find_element('xpath',"//a[@class='cancel-link']")
     driver.execute_script("arguments[0].click();", loginAsDifferentUserEl)
     sleep(2)
 
@@ -668,7 +676,7 @@ def enlist(driver):
     sleep(random.randint(10, 15))
 
     try:
-        myCoursesTopLinkEl = driver.find_element_by_xpath('//a[contains(@href,"/home/my-courses")]')
+        myCoursesTopLinkEl = driver.find_element('xpath','//a[contains(@href,"/home/my-courses")]')
         print("Going to click mycourses link")
         myCoursesTopLinkEl.click()
         print("After first click")
@@ -676,11 +684,11 @@ def enlist(driver):
         myCoursesTopLinkEl.click()
         print("After second click")
     except NoSuchElementException:
-        myCoursesTopLinkEl = driver.find_element_by_xpath("//a[@id='header.my-learning']")
+        myCoursesTopLinkEl = driver.find_element('xpath',"//a[@id='header.my-learning']")
         myCoursesTopLinkEl.click()
 
     sleep(random.randint(10, 15))
-    listOfEnrolledCourses = driver.find_elements_by_xpath('//a[contains(@class,"card--learning__details")]')
+    listOfEnrolledCourses = driver.find_elements('xpath','//a[contains(@class,"card--learning__details")]')
     numEnrolledCoursesInCurrPage = len(listOfEnrolledCourses)
     for course in listOfEnrolledCourses:
         print(course.get_attribute("href"))

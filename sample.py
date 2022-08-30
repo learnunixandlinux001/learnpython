@@ -33,8 +33,9 @@ if __name__ == '__main__':
     try:
         chrome_options = uc.ChromeOptions()
         chrome_options.add_argument('--load-extension=D:\\Onion-Browser-Button')
-        
-        driver = uc.Chrome(options=chrome_options)
+        chrome_options.add_argument("--start-maximized")
+
+        driver = uc.Chrome(options=chrome_options,browser_executable_path='C:\Program Files (x86)\Google\Chrome\Application\chrome.exe')
 
         instanceid = os.getlogin()
         connection = getDbConnection()

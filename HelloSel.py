@@ -63,7 +63,7 @@ while True:
     #this count used to be 2
     if count<5000:
         #os.system('"D:\\Users\\admin08\\Desktop\\Tor Browser\\Browser\\firefox.exe http://facebook.com"')
-        os.system("start firefox --allow-remote http://google.com")
+        #os.system("start firefox --allow-remote http://google.com")
         count=count+1
 
     # the first search term in the list is special. It will be used to deduce the name of the credentials table for the course
@@ -107,9 +107,9 @@ while True:
         #options.add_argument('no-sandbox')
         #driver = webdriver.Chrome('D:\\Users\\'+winuser+'\\learnpython\\chromedriver.exe',options=options)
 
-        launch_tbb_tor_with_stem(
-            'D:\\Users\\'+winuser+'\\Desktop\\Tor Browser')  # I think you can remove this, but maybe some future usages need that
-        driver = TorBrowserDriver('D:\\Users\\'+winuser+'\\Desktop\\Tor Browser', tor_cfg=cm.USE_STEM)
+        #launch_tbb_tor_with_stem(
+        #    'C:\\Users\\'+winuser+'\\Desktop\\Tor Browser')  # I think you can remove this, but maybe some future usages need that
+        driver = TorBrowserDriver('C:\\Users\\'+winuser+'\\Desktop\\Tor Browser', tor_cfg=cm.USE_STEM)
 
         print("Created a driver successfully!")
 

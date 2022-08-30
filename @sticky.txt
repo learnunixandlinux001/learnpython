@@ -5,7 +5,7 @@
 5. Do a pip3 install for the python library 'Undetected Chrome Driver'. Github page for project is https://github.com/ultrafunkamsterdam/undetected-chromedriver
 >pip install undetected-chromedriver
 This special chromedriver will help Chrome escape the Cloudfare filtering.
-6. In your python code, this is the snippet to use:
+6. In your python code, this is the snippet to use(Note that the new python file is sample.py):
         chrome_options = uc.ChromeOptions()
         chrome_options.add_argument('--load-extension=D:\\Onion-Browser-Button') //This folder is where you hacked the config.js file and made it 'ON' instead of 'OFF'
         driver = uc.Chrome(options=chrome_options)
